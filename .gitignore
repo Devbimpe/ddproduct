@@ -1,0 +1,87 @@
+# Mac
+._*
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+
+# CMake
+cmake-build-*/
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Eclipse
+.buildpath
+.classpath
+*.launch
+.loadpath
+.metadata
+.project
+*.pydevproject
+.settings/
+.springBeans
+
+### IntelliJ IDEA ###
+out/
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Node
+/**/node/
+/**/node_modules/
+
+# SASS
+/**/.sass-cache/
+
+# Bower
+/**/vendor/
+
+# Maven
+log/
+target/
+
+# Package Files
+!.mvn/wrapper/maven-wrapper.jar
+*.jar
+*.war
+*.ear
+
+# Java
+*.class
+
+# Directories
+/build/
+/bin/
+/out/
+/deploy/
+
+# Logs
+*.log
+
+# Local Config
+# /src/main/resources/application.properties
