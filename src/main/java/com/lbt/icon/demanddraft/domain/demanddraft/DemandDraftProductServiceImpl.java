@@ -113,6 +113,21 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
+    public DemandDraftProductInquiryDTO findById(Long id) throws IconException {
+        DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
+        DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByIdOrThrow(id, new EntityNotFoundException(String.format("Demand Draft Product %s Not found",id)).toString());
+        List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(demandDraftProduct.getProductCode());
+        List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(demandDraftProduct.getProductCode());
+        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(demandDraftProduct.getProductCode());
+
+        demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
+        demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
+        demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
+        demandDraftProductInquiryDTO.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
+        return demandDraftProductInquiryDTO;
+    }
+
+    @Override
     public QueryDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException{
         demandDraftProductValidator.validateFields(dto);
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->

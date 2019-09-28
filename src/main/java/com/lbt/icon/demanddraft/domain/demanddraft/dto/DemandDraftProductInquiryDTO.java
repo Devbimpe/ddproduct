@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class DemandDraftProductInquiryDTO {
     private QueryDemandDraftProductDTO demandDraftProduct;
-    private BankProductMasterDTO bankProductMasterDTO;
+    private BankProductMasterDTO bankProduct;
     private List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges;
     private List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments;
     private List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits;

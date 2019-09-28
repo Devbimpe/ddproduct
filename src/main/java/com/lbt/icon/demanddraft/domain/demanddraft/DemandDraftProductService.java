@@ -29,6 +29,8 @@ public interface DemandDraftProductService {
 
     DemandDraftProductInquiryDTO inquireByProductCode(String productCode) throws IconException;
 
+    DemandDraftProductInquiryDTO findById(Long id) throws IconException;
+
 
     QueryDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
 
