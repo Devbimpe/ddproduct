@@ -2,8 +2,11 @@
 package com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit;
 
 
+import com.lbt.icon.core.exception.EntityNotFoundException;
+import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
+import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.UpdateDemandDraftProductTranCodeLimitDTO;
 
 import java.util.List;
 
@@ -16,5 +19,11 @@ public interface DemandDraftProductTranCodeLimitService {
     QueryDemandDraftProductTranCodeLimitDTO create(DemandDraftProductTranCodeLimitDTO tranCodeLim);
 
     List<QueryDemandDraftProductTranCodeLimitDTO> findByProductCode(String productCode);
+
+//    UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO updateDemandDraftProductTranCodeLimitDTO) throws IconException;
+
+    QueryDemandDraftProductTranCodeLimitDTO updateOne(QueryDemandDraftProductTranCodeLimitDTO tranCodeLimit) throws EntityNotFoundException;
+
+    QueryDemandDraftProductTranCodeLimitDTO findById(Long id) throws IconException;
 }
 

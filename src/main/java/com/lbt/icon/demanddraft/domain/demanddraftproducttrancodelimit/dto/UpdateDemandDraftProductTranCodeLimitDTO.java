@@ -17,12 +17,14 @@ public class UpdateDemandDraftProductTranCodeLimitDTO extends BaseDTO {
 
     @JsonIgnore
     private String productCode;
+//
+//    private BigDecimal debitAmountLimit;
+//
+//    private BigDecimal creditAmountLimit;
+//
+//    private String tranReportCode;
 
-    private BigDecimal debitAmountLimit;
-
-    private BigDecimal creditAmountLimit;
-
-    private String tranCode;
+    private QueryDemandDraftProductTranCodeLimitDTO[] demandDraftProductTranCodeLimits;
 
 
 }

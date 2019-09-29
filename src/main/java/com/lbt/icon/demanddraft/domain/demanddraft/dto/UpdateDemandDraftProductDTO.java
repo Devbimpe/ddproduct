@@ -21,7 +21,7 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
     @JsonIgnore
     private String productCode;
 
-    private UpdateBankProductMasterDTO updateBankProductMasterDTO;
+    private UpdateBankProductMasterDTO bankProduct;
 
     private DemandDraftType demandDraftType;
 
