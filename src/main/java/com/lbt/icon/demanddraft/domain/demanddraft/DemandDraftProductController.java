@@ -57,8 +57,8 @@ public class DemandDraftProductController {
 
 
     @PutMapping("{productCode}")
-    public ResponseEntity<ApiResponseBase<QueryDemandDraftProductDTO>> update(@RequestBody UpdateDemandDraftProductDTO dto, @PathVariable("productCode") String productCode) throws IconException {
-        ApiResponseBase<QueryDemandDraftProductDTO> apiResponseBase = new ApiResponseBase<>();
+    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductDTO>> update(@RequestBody UpdateDemandDraftProductDTO dto, @PathVariable("productCode") String productCode) throws IconException {
+        ApiResponseBase<UpdateDemandDraftProductDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
         apiResponseBase.setResponse(demandDraftProductService.update(productCode,dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);

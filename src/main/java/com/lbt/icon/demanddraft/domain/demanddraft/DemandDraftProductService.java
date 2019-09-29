@@ -32,7 +32,7 @@ public interface DemandDraftProductService {
     DemandDraftProductInquiryDTO findById(Long id) throws IconException;
 
 
-    QueryDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
+    UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
 
 
     Page<BankProductMasterDTO> findAll(Pageable pageable, BankProductType productType) throws IconQueryException;

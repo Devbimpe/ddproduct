@@ -129,20 +129,20 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
-    public QueryDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException{
-        demandDraftProductValidator.validateFields(dto);
+    public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException{
+        demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found",productCode)));
-        demandDraftProduct = PatchMapper.of(() -> dto).map(demandDraftProduct).get();
+        demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
         demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
 
         BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
 
-        QueryDemandDraftProductDTO demandDraftProductDTO = new QueryDemandDraftProductDTO();
-        demandDraftProductDTO.setId(demandDraftProduct.getId());
-        modelMapper.map(demandDraftProduct, demandDraftProductDTO);
-        modelMapper.map(bankProductMasterDTO, demandDraftProductDTO.getBankProductMasterDTO());
-        return demandDraftProductDTO;
+        UpdateDemandDraftProductDTO update = new UpdateDemandDraftProductDTO();
+        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
+        update.setBankProduct(modelMapper.map(bankProductMasterDTO,UpdateBankProductMasterDTO.class));
+
+        return update;
     }
 
     @Override

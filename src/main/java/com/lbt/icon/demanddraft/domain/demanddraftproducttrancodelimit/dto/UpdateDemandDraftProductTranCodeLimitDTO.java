@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.core.domain.BaseDTO;
 import lombok.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author devbimpe
@@ -17,14 +18,8 @@ public class UpdateDemandDraftProductTranCodeLimitDTO extends BaseDTO {
 
     @JsonIgnore
     private String productCode;
-//
-//    private BigDecimal debitAmountLimit;
-//
-//    private BigDecimal creditAmountLimit;
-//
-//    private String tranReportCode;
 
-    private QueryDemandDraftProductTranCodeLimitDTO[] demandDraftProductTranCodeLimits;
+    private List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits;
 
 
 }

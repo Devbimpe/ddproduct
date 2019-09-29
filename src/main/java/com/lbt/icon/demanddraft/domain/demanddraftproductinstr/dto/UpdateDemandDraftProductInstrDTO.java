@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.core.domain.BaseDTO;
 import lombok.*;
 
+import java.util.List;
+
 /**
  * @author devbimpe
  */
@@ -17,9 +19,7 @@ public class UpdateDemandDraftProductInstrDTO extends BaseDTO {
     @JsonIgnore
     private String productCode;
 
-    private String instrCode;
-
-    private String instrTranType;
+    private List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments;
 
 
 }

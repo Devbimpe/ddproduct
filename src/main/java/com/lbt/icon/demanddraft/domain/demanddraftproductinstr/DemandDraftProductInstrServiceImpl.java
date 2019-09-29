@@ -1,7 +1,11 @@
 package com.lbt.icon.demanddraft.domain.demanddraftproductinstr;
 
+import com.lbt.icon.core.exception.EntityNotFoundException;
+import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.DemandDraftProductInstrDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDraftProductInstrDTO;
+import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.UpdateDemandDraftProductInstrDTO;
+import com.lbt.icon.functional.mapper.PatchMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -34,5 +38,41 @@ public class DemandDraftProductInstrServiceImpl implements DemandDraftProductIns
         demanddraftproductinstrRepository.findByProductCode(productCode).forEach(demandDraftProductInstr ->
                 instruments.add(modelMapper.map(demandDraftProductInstr,QueryDemandDraftProductInstrDTO.class)));
         return instruments;
+    }
+
+    @Override
+    public UpdateDemandDraftProductInstrDTO update(UpdateDemandDraftProductInstrDTO dto,String productCode) throws IconException{
+        List<QueryDemandDraftProductInstrDTO> instrDTOS = new ArrayList<>();
+        for (QueryDemandDraftProductInstrDTO q: dto.getDemandDraftProductInstruments()) {
+            if (q.getId() == null) {
+                q.setProductCode(productCode);
+                instrDTOS.add(modelMapper.map(demanddraftproductinstrRepository.create(modelMapper.map(q,DemandDraftProductInstr.class)),QueryDemandDraftProductInstrDTO.class));
+            }
+            else {
+                QueryDemandDraftProductInstrDTO byId = findById(q.getId());
+                byId = PatchMapper.of(() -> q).map(byId).get();
+                instrDTOS.add(updateOne(byId));
+            }
+        }
+        UpdateDemandDraftProductInstrDTO response = new UpdateDemandDraftProductInstrDTO();
+        response.setDemandDraftProductInstruments(instrDTOS);
+        return response;
+    }
+
+    @Override
+    public QueryDemandDraftProductInstrDTO findById(Long id) throws IconException{
+        DemandDraftProductInstr entity = demanddraftproductinstrRepository.findById(id).orElseThrow(() ->
+                new IconException(String.format("Entity with id, %d  NOT FOUND", id)));
+        return (modelMapper.map(entity, QueryDemandDraftProductInstrDTO.class));
+    }
+
+    @Override
+    public QueryDemandDraftProductInstrDTO updateOne(QueryDemandDraftProductInstrDTO dto) throws IconException{
+        DemandDraftProductInstr found = demanddraftproductinstrRepository.findById(dto.getId()).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Entity with id, %d  NOT FOUND", dto.getId())));
+        // validator.validateUpdate(id, dto);
+        modelMapper.map(dto, found);
+        return modelMapper.map(demanddraftproductinstrRepository.update(found),QueryDemandDraftProductInstrDTO.class);
+
     }
 }

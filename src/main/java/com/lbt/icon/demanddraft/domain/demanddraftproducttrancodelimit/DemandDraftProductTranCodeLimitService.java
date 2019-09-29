@@ -20,7 +20,7 @@ public interface DemandDraftProductTranCodeLimitService {
 
     List<QueryDemandDraftProductTranCodeLimitDTO> findByProductCode(String productCode);
 
-//    UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO updateDemandDraftProductTranCodeLimitDTO) throws IconException;
+    UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO dto, String productCode) throws IconException, EntityNotFoundException;
 
     QueryDemandDraftProductTranCodeLimitDTO updateOne(QueryDemandDraftProductTranCodeLimitDTO tranCodeLimit) throws EntityNotFoundException;
 

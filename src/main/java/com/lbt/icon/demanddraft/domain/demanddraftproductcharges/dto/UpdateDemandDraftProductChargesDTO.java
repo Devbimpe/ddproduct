@@ -7,6 +7,8 @@ import com.lbt.icon.core.domain.BaseDTO;
 import com.lbt.icon.demanddraft.type.ChargeCurrency;
 import lombok.*;
 
+import java.util.List;
+
 /**
  * @author devbimpe
  */
@@ -20,13 +22,7 @@ public class UpdateDemandDraftProductChargesDTO extends BaseDTO {
     @JsonIgnore
     private String productCode;
 
-    private String chargeType;
-
-    private String chargeCode;
-
-    private ChargeCurrency chargeCurrency;
-
-    private String exchangeRateCode;
+    private List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges;
 
 
 }

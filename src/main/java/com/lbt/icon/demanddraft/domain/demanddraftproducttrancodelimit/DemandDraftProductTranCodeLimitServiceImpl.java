@@ -42,27 +42,24 @@ public class DemandDraftProductTranCodeLimitServiceImpl implements DemandDraftPr
         return instruments;
     }
 
-//    @Override
-//    public UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO updateDemandDraftProductTranCodeLimitDTO){
-//
-//        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodes = new ArrayList<>();
-//
-//            tranCodes =
-//                    Arrays.stream(updateDemandDraftProductTranCodeLimitDTO.getDemandDraftProductTranCodeLimits()).map(e -> {
-//                        if (e.getId() == null) {
-//                            return modelMapper.map(demandDraftProductTranCodeLimitRepository.create(modelMapper.map(e, DemandDraftProductTranCodeLimit.class)), QueryDemandDraftProductTranCodeLimitDTO.class);
-//                        }
-//                        QueryDemandDraftProductTranCodeLimitDTO byId = findById(e.getId());
-//                        byId = PatchMapper.of(() -> e).map(byId).get();
-//                        return updateOne(byId);
-//
-//                    }).collect(Collectors.toList());
-//
-//
-//            UpdateDemandDraftProductTranCodeLimitDTO response = new UpdateDemandDraftProductTranCodeLimitDTO();
-//            response.setDemandDraftProductTranCodeLimits(tranCodes);
-//        return null;
-//    }
+    @Override
+    public UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO dto, String productCode) throws IconException, EntityNotFoundException{
+        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodes = new ArrayList<>();
+        for (QueryDemandDraftProductTranCodeLimitDTO q: dto.getDemandDraftProductTranCodeLimits()) {
+            if (q.getId() == null) {
+                q.setProductCode(productCode);
+                tranCodes.add(modelMapper.map(demandDraftProductTranCodeLimitRepository.create(modelMapper.map(q,DemandDraftProductTranCodeLimit.class)),QueryDemandDraftProductTranCodeLimitDTO.class));
+            }
+            else {
+                QueryDemandDraftProductTranCodeLimitDTO byId = findById(q.getId());
+                byId = PatchMapper.of(() -> q).map(byId).get();
+                tranCodes.add(updateOne(byId));
+            }
+        }
+            UpdateDemandDraftProductTranCodeLimitDTO response = new UpdateDemandDraftProductTranCodeLimitDTO();
+            response.setDemandDraftProductTranCodeLimits(tranCodes);
+        return response;
+    }
 
 
     @Override

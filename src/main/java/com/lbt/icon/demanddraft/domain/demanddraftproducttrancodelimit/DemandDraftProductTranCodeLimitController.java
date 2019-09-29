@@ -1,6 +1,8 @@
 package com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit;
 
 import com.lbt.icon.core.domain.ApiResponseBase;
+import com.lbt.icon.core.exception.EntityNotFoundException;
+import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.UpdateDemandDraftProductTranCodeLimitDTO;
 import io.swagger.annotations.Api;
@@ -23,13 +25,13 @@ public class DemandDraftProductTranCodeLimitController {
         this.demandDraftProductTranCodeLimitService = demandDraftProductTranCodeLimitService;
     }
 
-//    @PostMapping()
-//    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductTranCodeLimitDTO>> update(@RequestBody UpdateDemandDraftProductTranCodeLimitDTO updateDemandDraftProductTranCodeLimitDTO) throws EntityNotFoundException, FieldValidationException {
-//        ApiResponseBase<UpdateDemandDraftProductTranCodeLimitDTO> apiResponseBase = new ApiResponseBase();
-//        apiResponseBase.setSuccessMessage(" :::::::: Update Successful ::::::");
-//        apiResponseBase.setResponse(demandDraftProductTranCodeLimitService.update(updateDemandDraftProductTranCodeLimitDTO));
-//        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
-//    }
+    @PutMapping("{productCode}")
+    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductTranCodeLimitDTO>> update(@RequestBody UpdateDemandDraftProductTranCodeLimitDTO dto,  @PathVariable("productCode") String productCode) throws IconException, EntityNotFoundException {
+        ApiResponseBase<UpdateDemandDraftProductTranCodeLimitDTO> apiResponseBase = new ApiResponseBase();
+        apiResponseBase.setSuccessMessage(" :::::::: Update Successful ::::::");
+        apiResponseBase.setResponse(demandDraftProductTranCodeLimitService.update(dto,productCode));
+        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
+    }
 
 
 }
