@@ -105,10 +105,10 @@ public class DemandDraftProductValidator {
 
     private void validateTranCodeLimit(DemandDraftProductTranCodeLimitDTO[] dtoList, List<FieldValidationError> fieldValidationErrors) {
         for (DemandDraftProductTranCodeLimitDTO tranCodeLim: dtoList) {
-           if(!StringUtils.isEmpty(tranCodeLim.getTranCode())){
-               Boolean tranCodeExists = globalCodeService.existsByTypeAndCode("TRAN_CODE",tranCodeLim.getTranCode());
+           if(!StringUtils.isEmpty(tranCodeLim.getTranReportCode())){
+               Boolean tranCodeExists = globalCodeService.existsByTypeAndCode("TRAN_CODE",tranCodeLim.getTranReportCode());
                if(!tranCodeExists) {
-                   FieldValidationError error = new FieldValidationError("tranReportCode", "Transaction report code not found-> " + tranCodeLim.getTranCode());
+                   FieldValidationError error = new FieldValidationError("tranReportCode", "Transaction report code not found-> " + tranCodeLim.getTranReportCode());
                    fieldValidationErrors.add(error);
                }
            }

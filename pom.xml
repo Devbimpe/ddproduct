@@ -6,9 +6,9 @@
     <packaging>jar</packaging>
 
     <groupId>com.lbt.icon</groupId>
-    <artifactId>DemandDraft</artifactId>
-    <version>0.1.0</version>
-    <name>DemandDraft</name>
+    <artifactId>demanddraft</artifactId>
+    <version>0.1.2</version>
+    <name>demanddraft</name>
     <description>Demand draft project</description>
 
     <parent>
@@ -17,7 +17,6 @@
         <version>RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -55,13 +55,6 @@ public class DemandDraftProductController {
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<ApiResponseBase<DemandDraftProductInquiryDTO>> findById(@PathVariable("id") Long id) throws IconException {
-        ApiResponseBase<DemandDraftProductInquiryDTO> apiResponseBase = new ApiResponseBase();
-        DemandDraftProductInquiryDTO findById = demandDraftProductService.findById(id);
-        apiResponseBase.setResponse(findById);
-        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
-    }
 
     @PutMapping("{productCode}")
     public ResponseEntity<ApiResponseBase<QueryDemandDraftProductDTO>> update(@RequestBody UpdateDemandDraftProductDTO dto, @PathVariable("productCode") String productCode) throws IconException {

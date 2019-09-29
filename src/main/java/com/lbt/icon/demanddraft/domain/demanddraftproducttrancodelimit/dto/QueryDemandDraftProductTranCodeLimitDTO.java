@@ -22,7 +22,7 @@ public class QueryDemandDraftProductTranCodeLimitDTO extends BaseDTO {
 
     private BigDecimal creditAmountLimit;
 
-    private String tranCode;
+    private String tranReportCode;
 
 
 }

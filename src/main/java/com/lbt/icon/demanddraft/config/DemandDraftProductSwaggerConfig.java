@@ -30,7 +30,7 @@ public class DemandDraftProductSwaggerConfig {
     public Docket demandDraftProductApi() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("demand.draft")
+                .groupName("demanddraft")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.lbt.icon.demanddraft"))
                 .paths(PathSelectors.any())

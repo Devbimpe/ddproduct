@@ -23,7 +23,7 @@ public class DemandDraftProductTranCodeLimitDTO implements Serializable {
 
     private BigDecimal creditAmountLimit;
 
-    private String tranCode;
+    private String tranReportCode;
 
 
 }

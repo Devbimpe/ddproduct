@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -104,7 +105,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
-
+        bankProductMasterService.findAllByProductCode(productCode).ifPresent(d -> demandDraftProductInquiryDTO.setBankProduct(d));
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
