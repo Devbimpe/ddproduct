@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class DemandDraftProductTranCodeLimitServiceImpl implements DemandDraftProductTranCodeLimitService {
 
     private final DemandDraftProductTranCodeLimitRepository demandDraftProductTranCodeLimitRepository;
-    private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
     private final DemandDraftProductTranCodeLimitValidator demandDraftProductTranCodeLimitValidator;
     private final ModelMapper modelMapper;
 

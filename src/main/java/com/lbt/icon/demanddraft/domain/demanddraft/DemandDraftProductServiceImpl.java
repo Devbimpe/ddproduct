@@ -136,7 +136,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         demandDraftProduct = PatchMapper.of(() -> dto).map(demandDraftProduct).get();
         demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
 
-        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getUpdateBankProductMasterDTO());
+        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
 
         QueryDemandDraftProductDTO demandDraftProductDTO = new QueryDemandDraftProductDTO();
         demandDraftProductDTO.setId(demandDraftProduct.getId());
