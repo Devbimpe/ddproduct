@@ -1,6 +1,8 @@
 package com.lbt.icon.demanddraft.domain.demanddraft;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lbt.icon.bankproduct.domain.master.BankProductMaster;
+import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,6 +52,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductValidator demandDraftProductValidator;
     private final ModelMapper modelMapper;
     private final BankProductMasterService bankProductMasterService;
+    private final BankProductMasterRepo bankProductMasterRepo;
     private final DemandDraftProductChargesService demandDraftProductChargesService;
     private final DemandDraftProductInstrService demandDraftProductInstrService;
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
@@ -170,5 +174,16 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Transactional
     public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.disableByProductCode(productCode);
+    }
+
+    @Override
+    public List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode) {
+        List<DemandDraftProduct> demandDraftProducts = demandDraftProductRepository.findByProductCodeLike(productCode.toUpperCase());
+        List<BankProductMasterDTO> masterDtos = new ArrayList<>();
+        for(DemandDraftProduct d : demandDraftProducts) {
+           bankProductMasterService.findByProductCode(d.getProductCode()).ifPresent(m->masterDtos.add(m));
+        }
+        return masterDtos;
+
     }
 }

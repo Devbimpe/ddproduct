@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -74,7 +75,7 @@ public class DemandDraftProductController {
     }
 
 
-    @PutMapping("/disable/{productCode}")
+    @PutMapping("/{productCode}/disable")
     @ResponseBody
     public ResponseEntity<ApiResponseBase<BankProductMasterDTO>> disableByProductCode(
             @NotBlank @PathVariable(value = "productCode") String productCode)  throws FieldValidationException, EntityNotFoundException{
@@ -84,7 +85,7 @@ public class DemandDraftProductController {
         return new ResponseEntity<>(rsp, HttpStatus.OK);
     }
 
-    @PutMapping("/enable/{productCode}")
+    @PutMapping("/{productCode}/enable")
     @ResponseBody
     public ResponseEntity<ApiResponseBase<BankProductMasterDTO>> enableByProductCode(
             @NotBlank @PathVariable(value = "productCode") String productCode)  throws FieldValidationException, EntityNotFoundException{
@@ -92,6 +93,18 @@ public class DemandDraftProductController {
         rsp.setResponse(demandDraftProductService.enableByProductCode(productCode));
         rsp.setSuccessMessage("Demand draft product successfully enabled");
         return new ResponseEntity<>(rsp, HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/{productCode}/findbyproductcodelike")
+    public ResponseEntity<ApiResponseBase<List<BankProductMasterDTO>>> getByProductCodeLike(@PathVariable String productCode) throws IconException {
+
+        List<BankProductMasterDTO> queryDtos = demandDraftProductService.findProductsByProductCodeLike(productCode);
+        ApiResponseBase<List<BankProductMasterDTO>> apiResponseBase = new ApiResponseBase();
+        apiResponseBase.setSuccessMessage("Demand draft products fetched successfully");
+        apiResponseBase.setResponse(queryDtos);
+        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 
 

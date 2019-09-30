@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author devbimpe
@@ -40,5 +41,7 @@ public interface DemandDraftProductService {
     BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException;
 
     BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException;
+
+    List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode);
 }
 

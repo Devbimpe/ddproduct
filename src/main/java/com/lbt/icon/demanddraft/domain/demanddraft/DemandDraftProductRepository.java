@@ -3,6 +3,7 @@ package com.lbt.icon.demanddraft.domain.demanddraft;
 import com.lbt.icon.core.domain.repo.GenericRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,6 +15,8 @@ public interface DemandDraftProductRepository extends GenericRepository<DemandDr
     Boolean existsByProductCode(String productCode);
 
     Optional<DemandDraftProduct> findByProductCode(String productCode);
+
+    List<DemandDraftProduct> findByProductCodeLike(String productCode);
 
 //    DemandDraftProduct findByProductCode(String productCode);
 }
