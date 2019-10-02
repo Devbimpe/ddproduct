@@ -16,7 +16,7 @@ public interface DemandDraftProductRepository extends GenericRepository<DemandDr
 
     Optional<DemandDraftProduct> findByProductCode(String productCode);
 
-    List<DemandDraftProduct> findByProductCodeLike(String productCode);
+    List<DemandDraftProduct> findByProductCodeContaining(String productCode);
 
 //    DemandDraftProduct findByProductCode(String productCode);
 }

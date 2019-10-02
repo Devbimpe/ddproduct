@@ -8,10 +8,7 @@ import com.lbt.icon.core.exception.EntityNotFoundException;
 import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.CreateDemandDraftProductDTO;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.DemandDraftProductInquiryDTO;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.QueryDemandDraftProductDTO;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductDTO;
+import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,10 +55,10 @@ public class DemandDraftProductController {
 
 
     @PutMapping("{productCode}")
-    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductDTO>> update(@RequestBody UpdateDemandDraftProductDTO dto, @PathVariable("productCode") String productCode) throws IconException {
-        ApiResponseBase<UpdateDemandDraftProductDTO> apiResponseBase = new ApiResponseBase<>();
+    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependencies(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("productCode") String productCode) throws IconException {
+        ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
-        apiResponseBase.setResponse(demandDraftProductService.update(productCode,dto));
+        apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(dto,productCode));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 

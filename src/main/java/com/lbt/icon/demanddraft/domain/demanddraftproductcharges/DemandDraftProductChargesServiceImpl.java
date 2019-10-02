@@ -45,21 +45,26 @@ public class DemandDraftProductChargesServiceImpl implements DemandDraftProductC
 
     @Override
     public UpdateDemandDraftProductChargesDTO update(UpdateDemandDraftProductChargesDTO dto, String productCode) throws IconException {
-        List<QueryDemandDraftProductChargesDTO> chargeDTOS = new ArrayList<>();
-        for (QueryDemandDraftProductChargesDTO q: dto.getDemandDraftProductCharges()) {
+        UpdateDemandDraftProductChargesDTO response = new UpdateDemandDraftProductChargesDTO();
+        response.setDemandDraftProductCharges(updateChargeBatch(productCode, dto.getDemandDraftProductCharges()));
+        return response;
+    }
+
+    @Override
+    public List<QueryDemandDraftProductChargesDTO> updateChargeBatch(String productCode, List<QueryDemandDraftProductChargesDTO> chargeDTOS) throws IconException {
+        List<QueryDemandDraftProductChargesDTO> dtos = new ArrayList<>();
+        for (QueryDemandDraftProductChargesDTO q: chargeDTOS){
             if (q.getId() == null) {
                 q.setProductCode(productCode);
-                chargeDTOS.add(modelMapper.map(demanddraftProductChargesRepository.create(modelMapper.map(q,DemandDraftProductCharges.class)),QueryDemandDraftProductChargesDTO.class));
+                dtos.add(modelMapper.map(demanddraftProductChargesRepository.create(modelMapper.map(q, DemandDraftProductCharges.class)),QueryDemandDraftProductChargesDTO.class));
             }
             else {
                 QueryDemandDraftProductChargesDTO byId = findById(q.getId());
                 byId = PatchMapper.of(() -> q).map(byId).get();
-                chargeDTOS.add(updateOne(byId));
+                dtos.add(updateOne(byId));
             }
         }
-        UpdateDemandDraftProductChargesDTO response = new UpdateDemandDraftProductChargesDTO();
-        response.setDemandDraftProductCharges(chargeDTOS);
-        return response;
+        return dtos;
     }
 
     @Override

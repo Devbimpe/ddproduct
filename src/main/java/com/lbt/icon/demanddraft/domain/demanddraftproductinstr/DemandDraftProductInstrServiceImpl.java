@@ -42,20 +42,8 @@ public class DemandDraftProductInstrServiceImpl implements DemandDraftProductIns
 
     @Override
     public UpdateDemandDraftProductInstrDTO update(UpdateDemandDraftProductInstrDTO dto,String productCode) throws IconException{
-        List<QueryDemandDraftProductInstrDTO> instrDTOS = new ArrayList<>();
-        for (QueryDemandDraftProductInstrDTO q: dto.getDemandDraftProductInstruments()) {
-            if (q.getId() == null) {
-                q.setProductCode(productCode);
-                instrDTOS.add(modelMapper.map(demanddraftproductinstrRepository.create(modelMapper.map(q,DemandDraftProductInstr.class)),QueryDemandDraftProductInstrDTO.class));
-            }
-            else {
-                QueryDemandDraftProductInstrDTO byId = findById(q.getId());
-                byId = PatchMapper.of(() -> q).map(byId).get();
-                instrDTOS.add(updateOne(byId));
-            }
-        }
         UpdateDemandDraftProductInstrDTO response = new UpdateDemandDraftProductInstrDTO();
-        response.setDemandDraftProductInstruments(instrDTOS);
+        response.setDemandDraftProductInstruments(updateInstrBatch(productCode,dto.getDemandDraftProductInstruments()));
         return response;
     }
 
@@ -74,5 +62,22 @@ public class DemandDraftProductInstrServiceImpl implements DemandDraftProductIns
         modelMapper.map(dto, found);
         return modelMapper.map(demanddraftproductinstrRepository.update(found),QueryDemandDraftProductInstrDTO.class);
 
+    }
+
+    @Override
+    public List<QueryDemandDraftProductInstrDTO> updateInstrBatch(String productCode, List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments) throws IconException {
+        List<QueryDemandDraftProductInstrDTO> instrDTOS = new ArrayList<>();
+        for (QueryDemandDraftProductInstrDTO q: demandDraftProductInstruments) {
+            if (q.getId() == null) {
+                q.setProductCode(productCode);
+                instrDTOS.add(modelMapper.map(demanddraftproductinstrRepository.create(modelMapper.map(q,DemandDraftProductInstr.class)),QueryDemandDraftProductInstrDTO.class));
+            }
+            else {
+                QueryDemandDraftProductInstrDTO byId = findById(q.getId());
+                byId = PatchMapper.of(() -> q).map(byId).get();
+                instrDTOS.add(updateOne(byId));
+            }
+        }
+        return instrDTOS;
     }
 }

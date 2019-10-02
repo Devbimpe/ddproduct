@@ -20,10 +20,12 @@ public interface DemandDraftProductTranCodeLimitService {
 
     List<QueryDemandDraftProductTranCodeLimitDTO> findByProductCode(String productCode);
 
-    UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO dto, String productCode) throws IconException, EntityNotFoundException;
+    UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO dto, String productCode) throws IconException;
 
     QueryDemandDraftProductTranCodeLimitDTO updateOne(QueryDemandDraftProductTranCodeLimitDTO tranCodeLimit) throws EntityNotFoundException;
 
     QueryDemandDraftProductTranCodeLimitDTO findById(Long id) throws IconException;
+
+    List<QueryDemandDraftProductTranCodeLimitDTO> updateTranCodeBatch(String productCode, List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits) throws IconException;
 }
 

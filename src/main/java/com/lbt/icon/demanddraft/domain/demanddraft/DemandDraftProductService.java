@@ -8,10 +8,7 @@ import com.lbt.icon.core.exception.EntityNotFoundException;
 import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.CreateDemandDraftProductDTO;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.DemandDraftProductInquiryDTO;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.QueryDemandDraftProductDTO;
-import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductDTO;
+import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -35,6 +32,7 @@ public interface DemandDraftProductService {
 
     UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
 
+    UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(UpdateDemandDraftProductWithDependenciesDTO dto, String productCode) throws IconException;
 
     Page<BankProductMasterDTO> findAll(Pageable pageable, BankProductType productType) throws IconQueryException;
 

@@ -43,22 +43,10 @@ public class DemandDraftProductTranCodeLimitServiceImpl implements DemandDraftPr
     }
 
     @Override
-    public UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO dto, String productCode) throws IconException, EntityNotFoundException{
-        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodes = new ArrayList<>();
-        for (QueryDemandDraftProductTranCodeLimitDTO q: dto.getDemandDraftProductTranCodeLimits()) {
-            if (q.getId() == null) {
-                q.setProductCode(productCode);
-                tranCodes.add(modelMapper.map(demandDraftProductTranCodeLimitRepository.create(modelMapper.map(q,DemandDraftProductTranCodeLimit.class)),QueryDemandDraftProductTranCodeLimitDTO.class));
-            }
-            else {
-                QueryDemandDraftProductTranCodeLimitDTO byId = findById(q.getId());
-                byId = PatchMapper.of(() -> q).map(byId).get();
-                tranCodes.add(updateOne(byId));
-            }
-        }
+    public UpdateDemandDraftProductTranCodeLimitDTO update(UpdateDemandDraftProductTranCodeLimitDTO dto, String productCode) throws IconException{
             UpdateDemandDraftProductTranCodeLimitDTO response = new UpdateDemandDraftProductTranCodeLimitDTO();
-            response.setDemandDraftProductTranCodeLimits(tranCodes);
-        return response;
+            response.setDemandDraftProductTranCodeLimits(updateTranCodeBatch(productCode,dto.getDemandDraftProductTranCodeLimits()));
+            return response;
     }
 
 
@@ -78,5 +66,23 @@ public class DemandDraftProductTranCodeLimitServiceImpl implements DemandDraftPr
                 new IconException(String.format("Entity with id, %d  NOT FOUND", id)));
         return (modelMapper.map(entity, QueryDemandDraftProductTranCodeLimitDTO.class));
 
+    }
+
+    @Override
+    public List<QueryDemandDraftProductTranCodeLimitDTO> updateTranCodeBatch(String productCode, List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits) throws IconException {
+        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodes = new ArrayList<>();
+        for (QueryDemandDraftProductTranCodeLimitDTO q: demandDraftProductTranCodeLimits) {
+            if (q.getId() == null) {
+                q.setProductCode(productCode);
+                tranCodes.add(modelMapper.map(demandDraftProductTranCodeLimitRepository.create(modelMapper.map(q,DemandDraftProductTranCodeLimit.class)),QueryDemandDraftProductTranCodeLimitDTO.class));
+            }
+            else {
+                QueryDemandDraftProductTranCodeLimitDTO byId = findById(q.getId());
+                byId = PatchMapper.of(() -> q).map(byId).get();
+                tranCodes.add(updateOne(byId));
+            }
+        }
+
+        return tranCodes;
     }
 }

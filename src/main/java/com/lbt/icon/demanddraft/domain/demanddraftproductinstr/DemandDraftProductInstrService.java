@@ -23,5 +23,7 @@ public interface DemandDraftProductInstrService {
     QueryDemandDraftProductInstrDTO updateOne(QueryDemandDraftProductInstrDTO dto) throws IconException;
 
     QueryDemandDraftProductInstrDTO findById(Long id) throws IconException;
+
+    List<QueryDemandDraftProductInstrDTO> updateInstrBatch(String productCode, List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments) throws IconException;
 }
 

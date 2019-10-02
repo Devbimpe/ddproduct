@@ -23,7 +23,7 @@ public interface DemandDraftProductChargesService {
 
     UpdateDemandDraftProductChargesDTO update(UpdateDemandDraftProductChargesDTO dto, String productCode) throws IconException;
     QueryDemandDraftProductChargesDTO updateOne(QueryDemandDraftProductChargesDTO dto) throws IconException;
-
+    List<QueryDemandDraftProductChargesDTO>  updateChargeBatch(String productCode, List<QueryDemandDraftProductChargesDTO> chargeDTOS) throws IconException;
     QueryDemandDraftProductChargesDTO findById(Long id) throws IconException;
 }
 
