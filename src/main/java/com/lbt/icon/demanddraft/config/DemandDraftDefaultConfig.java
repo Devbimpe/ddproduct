@@ -9,7 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 @Configuration
-public class DefaultConfig {
+public class DemandDraftDefaultConfig {
 //    @Bean
 //    public ModelMapper modelMapper() {
 //        return new ModelMapper();
