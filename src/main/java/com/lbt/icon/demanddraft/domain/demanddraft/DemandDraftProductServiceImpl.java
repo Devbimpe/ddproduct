@@ -4,6 +4,7 @@ import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
+import com.lbt.icon.bankproduct.domain.office.BankOfficeProductService;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.exception.*;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
@@ -53,6 +54,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductInstrService demandDraftProductInstrService;
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
     private final DemandDraftProductChargesRepository demanddraftProductChargesRepository;
+    private final BankOfficeProductService bankOfficeProductService;
 
     @Override
 
@@ -101,7 +103,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
-        bankProductMasterService.findAllByProductCode(productCode).ifPresent(d -> demandDraftProductInquiryDTO.setBankProduct(d));
+        bankProductMasterService.findAllByProductCode(productCode).ifPresent(d ->
+                demandDraftProductInquiryDTO.setBankProduct(d));
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
