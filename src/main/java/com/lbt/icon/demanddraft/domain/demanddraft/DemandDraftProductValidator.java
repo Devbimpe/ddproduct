@@ -7,11 +7,11 @@ import com.lbt.icon.bankcommons.domain.company.financialinstitution.FinancialIns
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
 import com.lbt.icon.bankproduct.domain.master.dto.AddBankProductMasterDTO;
-import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.exception.FieldValidationError;
 import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.FieldValidationRuntimeException;
 import com.lbt.icon.core.exception.IconException;
+
 import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.CreateDemandDraftProductDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
