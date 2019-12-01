@@ -1,10 +1,18 @@
 package com.lbt.icon.demanddraft.domain.demanddraft;
 
+import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranch;
+import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranchRepo;
+import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
+import com.lbt.icon.bankcommons.domain.globalparams.globalcode.dto.GlobalCodeDTO;
+import com.lbt.icon.bankproduct.domain.branch.BankProductBranch;
+import com.lbt.icon.bankproduct.domain.branch.BankProductBranchRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.office.BankOfficeProductService;
+import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
+import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.exception.*;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
@@ -19,6 +27,8 @@ import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDra
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.functional.mapper.PatchMapper;
+import com.lbt.icon.ledger.setup.glcodes.subcategory.GLSubCategoryService;
+import com.lbt.icon.ledger.setup.glcodes.subcategory.dto.GLSubCategoryDto;
 import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +65,11 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
     private final DemandDraftProductChargesRepository demanddraftProductChargesRepository;
     private final BankOfficeProductService bankOfficeProductService;
+	private final BankProductBranchRepo bankProductBranchRepo;
+	private final BankBranchRepo bankBranchRepo;
+	private final GlobalCodeService globalCodeService;
+	private final GLSubCategoryService gLSubCategoryService;
+	private final BankProductGLRepo bankProductGLRepo;
 
     @Override
 
@@ -214,4 +229,107 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException{
         return  demandDraftProductChargesService.updateChargeBatch(productCode,demandDraftProductCharges);
     }
+    
+
+
+	
+
+	@Override
+	public boolean hasAccountNumberGenCode(String productCode) {
+		String genCode = getAccountNumberGenCodeByProductCode(productCode);
+		return !genCode.isEmpty();
+	}
+	
+	@Override
+	public String getAccountNumberGenCodeByProductCode(String productCode) {
+		Optional<String> optional = bankProductMasterRepo.getAcctGenCodeUsingProductCode(productCode);
+		return optional.isPresent() ? optional.get().trim() : "";
+	}
+
+	@Override
+	public List<DemandDraftProductBranchDto> findBranchesByProductCode(String productCode) {
+		
+		List<DemandDraftProductBranchDto> officeProductBranchDtos = new ArrayList<DemandDraftProductBranchDto>();
+		
+		List<BankProductBranch> bankProductBranches = bankProductBranchRepo.findAllByProductCodeIgnoreCase(productCode);
+		for(BankProductBranch bankProductBranch : bankProductBranches) {
+			String branchCode = bankProductBranch.getBranchCode() != null ? bankProductBranch.getBranchCode().trim() : "";
+			Optional<BankBranch> optional = bankBranchRepo.findFirstByBranchCodeIgnoreCase(branchCode);
+			if(optional.isPresent()) {
+				DemandDraftProductBranchDto officeProductBranchDto = DemandDraftProductBranchDto.builder()
+					.branchCode(branchCode)
+					.description(optional.get().getShortName())
+					.build();
+				officeProductBranchDtos.add(officeProductBranchDto);				
+			}
+		}
+		return officeProductBranchDtos;
+	}
+
+	@Override
+	public List<DemandDraftProductCurrencyDto> findCurrenciesByProductCode(String productCode) {
+		
+		List<DemandDraftProductCurrencyDto> officeProductCurrencyDtos = demandDraftProductRepository.findCurrencyDtoForProduct(productCode);		
+		return officeProductCurrencyDtos;
+	}
+
+	@Override
+	public List<DemandDraftProductSpacerCodeDto> findSpacersByProductCode(String productCode) {
+		Optional<DemandDraftProduct> optional = demandDraftProductRepository.findByProductCode(productCode);
+		if(optional.isPresent()) {
+			
+			DemandDraftProduct bankOfficeProduct = optional.get();
+
+			//List<DemandDraftProductSpacerCode> demandDraftProductSpacerCodes = demandDraftSpacerCodeRepo.findAllByProductCode(productCode);
+			//List<String> spacerCodes = demandDraftProductSpacerCodes.stream().map(o -> o.getSpacerCode()).collect(Collectors.toList());
+			List<String> spacerCodes = new ArrayList<String>(); // above line PENDING implementation
+			List<DemandDraftProductSpacerCodeDto> demandDraftProductSpacerCodeDtos = new ArrayList<>();
+			for(String spacerCode : spacerCodes) {
+				
+				GlobalCodeDTO globalCodeDto = null;
+				try {
+					globalCodeDto = globalCodeService.findByTypeAndCode("SPACER", spacerCode);
+				} catch (IconQueryException e) {					
+				}
+				String description = (globalCodeDto != null ? globalCodeDto.getDescription() : "");				
+				DemandDraftProductSpacerCodeDto demandDraftProductSpacerDto = DemandDraftProductSpacerCodeDto.builder()
+					.spacerCode(spacerCode)
+					.description(description)
+					.build();
+				demandDraftProductSpacerCodeDtos.add(demandDraftProductSpacerDto);
+			}
+			return demandDraftProductSpacerCodeDtos;
+		}
+		else
+			return new ArrayList<>();
+	}
+
+	@Override
+	public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
+		
+		List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
+		
+		List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
+		for(BankProductGL bankProductGl : bankProductGls) {
+			String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";			
+			Optional<GLSubCategoryDto> optional = null;
+			try {
+				optional = gLSubCategoryService.findFirstByCode(glSubCode);
+				
+				if(optional.isPresent()) {
+					demandDraftProductGlDtos.add(
+						DemandDraftProductGlDto.builder()
+							.glSubCode(glSubCode)
+							.description(optional.get().getDescription())
+							.build()
+					);
+				}
+			} catch (EntityNotFoundException iqe) {				
+			} catch (IconQueryException iqe) {				
+			}
+		}
+		
+		
+		return demandDraftProductGlDtos;
+	}
 }

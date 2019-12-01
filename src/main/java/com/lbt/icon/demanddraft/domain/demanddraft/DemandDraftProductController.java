@@ -104,7 +104,82 @@ public class DemandDraftProductController {
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 
+	@GetMapping("/{productCode}/hasaccountnogencode")
+    public boolean hasAccountNumberGenCode(@PathVariable String productCode) {
+		return demandDraftProductService.hasAccountNumberGenCode(productCode);
+    }
 
+	@GetMapping("/{productCode}/findbranchcodes")
+    public ResponseEntity<?> findBranchesByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {
+		
+		List<DemandDraftProductBranchDto> queryDtos = demandDraftProductService.findBranchesByProductCode(productCode); 	
+    	return new ResponseEntity<>(
+    		new ApiResponseBase<>(
+    			queryDtos,
+    			HttpStatus.OK.name(),
+    			false,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null), 
+    		HttpStatus.OK);
+    }
+
+	@GetMapping("/{productCode}/findcurrencies")
+    public ResponseEntity<?> findCurrenciesByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {
+		
+		List<DemandDraftProductCurrencyDto> queryDtos = demandDraftProductService.findCurrenciesByProductCode(productCode); 	
+    	return new ResponseEntity<>(
+    		new ApiResponseBase<>(
+    			queryDtos,
+    			HttpStatus.OK.name(),
+    			false,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null), 
+    		HttpStatus.OK);
+    }
+
+	@GetMapping("/{productCode}/findspacers")
+    public ResponseEntity<?> findSpacersByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {
+		
+		List<DemandDraftProductSpacerCodeDto> queryDtos = demandDraftProductService.findSpacersByProductCode(productCode); 	
+    	return new ResponseEntity<>(
+    		new ApiResponseBase<>(
+    			queryDtos,
+    			HttpStatus.OK.name(),
+    			false,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null), 
+    		HttpStatus.OK);
+    }
+
+	@GetMapping("/{productCode}/findglcodes")
+    public ResponseEntity<?> findGlsByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {
+		
+		List<DemandDraftProductGlDto> queryDtos = demandDraftProductService.findGlsByProductCode(productCode); 	
+    	return new ResponseEntity<>(
+    		new ApiResponseBase<>(
+    			queryDtos,
+    			HttpStatus.OK.name(),
+    			false,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null,
+    			null), 
+    		HttpStatus.OK);
+    }
 }
 
 

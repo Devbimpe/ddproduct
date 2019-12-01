@@ -41,5 +41,21 @@ public interface DemandDraftProductService {
     BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException;
 
     List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode);
+
+
+	String getAccountNumberGenCodeByProductCode(String productCode);
+
+	boolean hasAccountNumberGenCode(String productCode);
+
+	List<DemandDraftProductBranchDto> findBranchesByProductCode(String productCode);
+
+
+	List<DemandDraftProductCurrencyDto> findCurrenciesByProductCode(String productCode);
+
+
+	List<DemandDraftProductSpacerCodeDto> findSpacersByProductCode(String productCode);
+
+
+	List<DemandDraftProductGlDto> findGlsByProductCode(String productCode);
 }
 
