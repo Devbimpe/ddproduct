@@ -1,4 +1,4 @@
-package com.lbt.icon.demanddraftproductinstrument.domain.demanddraftproductinstr;
+package com.lbt.icon.demanddraft.domain.demanddraftproductinstr;
 
 import com.lbt.icon.core.domain.ApiResponseBase;
 import com.lbt.icon.core.exception.EntityNotFoundException;

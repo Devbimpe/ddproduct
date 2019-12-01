@@ -6,7 +6,7 @@
 
     <groupId>com.lbt.icon</groupId>
     <artifactId>demanddraft</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
     <name>demanddraft</name>
     <description>Demand draft project</description>
 
@@ -37,6 +37,13 @@
             <groupId>com.lbt.icon</groupId>
             <artifactId>bankproduct.master</artifactId>
             <version>${bankproduct.master.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lbt.icon</groupId>
+            <artifactId>transaction.events</artifactId>
+            <version>RELEASE</version>
+
         </dependency>
 
 

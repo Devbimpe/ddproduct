@@ -68,29 +68,30 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 //            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = CreateDemandDraftProductDTO.class, validateMethod = "validate"))
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException{
 
-        BankProductMasterDTO bpm = null;
-        demandDraftProductValidator.validate(dto);
-        QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
+
+            BankProductMasterDTO bpm = null;
+            demandDraftProductValidator.validate(dto);
+            QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
             bpm = bankProductMasterService.create(dto.getBankProduct());
             String productCode = bpm.getProductCode();
             dto.getDemandDraftProduct().setProductCode(productCode);
-            for (DemandDraftProductChargesDTO charge:dto.getDemandDraftProductCharges()) {
+            for (DemandDraftProductChargesDTO charge : dto.getDemandDraftProductCharges()) {
                 charge.setProductCode(productCode);
                 demandDraftProductChargesService.create(charge);
             }
-            for (DemandDraftProductInstrDTO instr: dto.getDemandDraftProductInstruments()) {
+            for (DemandDraftProductInstrDTO instr : dto.getDemandDraftProductInstruments()) {
                 instr.setProductCode(productCode);
                 demandDraftProductInstrService.create(instr);
             }
-            for (DemandDraftProductTranCodeLimitDTO tranCodeLim: dto.getDemandDraftProductTranCodeLimits()) {
+            for (DemandDraftProductTranCodeLimitDTO tranCodeLim : dto.getDemandDraftProductTranCodeLimits()) {
                 tranCodeLim.setProductCode(productCode);
                 demandDraftProductTranCodeLimitService.create(tranCodeLim);
             }
-            DemandDraftProduct demandDraftProduct = modelMapper.map(dto.getDemandDraftProduct(),DemandDraftProduct.class);
+            DemandDraftProduct demandDraftProduct = modelMapper.map(dto.getDemandDraftProduct(), DemandDraftProduct.class);
             queryDemandDraftProductDTO = new QueryDemandDraftProductDTO();
             queryDemandDraftProductDTO.setBankProductMasterDTO(bpm);
-            modelMapper.map(demandDraftProductRepository.create(demandDraftProduct),queryDemandDraftProductDTO);
-        return  queryDemandDraftProductDTO;
+            modelMapper.map(demandDraftProductRepository.create(demandDraftProduct), queryDemandDraftProductDTO);
+            return queryDemandDraftProductDTO;
 
     }
 
@@ -150,13 +151,13 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
 
         UpdateDemandDraftProductWithDependenciesDTO update = new UpdateDemandDraftProductWithDependenciesDTO();
-            demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
-            BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
-            update.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
-            update.setBankProduct(modelMapper.map(bankProductMasterDTO,UpdateBankProductMasterDTO.class));
-            update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(),productCode));
-            update.setDemandDraftProductInstruments(this.updateInstrument(dto.getDemandDraftProductInstruments(),productCode));
-            update.setDemandDraftProductTranCodeLimits(this.updateTranCode(dto.getDemandDraftProductTranCodeLimits(),productCode));
+        demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
+        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
+        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
+        update.setBankProduct(modelMapper.map(bankProductMasterDTO,UpdateBankProductMasterDTO.class));
+        update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(),productCode));
+        update.setDemandDraftProductInstruments(this.updateInstrument(dto.getDemandDraftProductInstruments(),productCode));
+        update.setDemandDraftProductTranCodeLimits(this.updateTranCode(dto.getDemandDraftProductTranCodeLimits(),productCode));
 
         return update;
     }
@@ -195,7 +196,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<DemandDraftProduct> demandDraftProducts = demandDraftProductRepository.findByProductCodeContaining(productCode.toUpperCase());
         List<BankProductMasterDTO> masterDtos = new ArrayList<>();
         for(DemandDraftProduct d : demandDraftProducts) {
-           bankProductMasterService.findByProductCode(d.getProductCode()).ifPresent(m->masterDtos.add(m));
+            bankProductMasterService.findByProductCode(d.getProductCode()).ifPresent(m->masterDtos.add(m));
         }
         return masterDtos;
 
