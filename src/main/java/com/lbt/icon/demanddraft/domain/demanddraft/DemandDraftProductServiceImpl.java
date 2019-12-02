@@ -58,14 +58,14 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
     @Override
 
-//    @Checkable(
-//            naturalIdentifier = "naturalId",
-//            code = "CREATE_DEMAND_DRAFT",
-//            operation = Checkable.Operation.Insert,
-//            description = "create demand draft product record",
-//            dtoClass = CreateDemandDraftProductDTO.class,
-//            returnClass = QueryDemandDraftProductDTO.class,
-//            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = CreateDemandDraftProductDTO.class, validateMethod = "validate"))
+    @Checkable(
+            naturalIdentifier = "naturalId",
+            code = "CREATE_DEMAND_DRAFT",
+            operation = Checkable.Operation.Insert,
+            description = "create demand draft product record",
+            dtoClass = CreateDemandDraftProductDTO.class,
+            returnClass = QueryDemandDraftProductDTO.class,
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = CreateDemandDraftProductDTO.class, validateMethod = "validate"))
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException{
 
 
