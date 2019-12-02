@@ -10,7 +10,6 @@ import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
-import com.lbt.icon.bankproduct.domain.office.BankOfficeProductService;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
@@ -64,8 +63,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductInstrService demandDraftProductInstrService;
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
     private final DemandDraftProductChargesRepository demanddraftProductChargesRepository;
-    private final BankOfficeProductService bankOfficeProductService;
-	private final BankProductBranchRepo bankProductBranchRepo;
+    private final BankProductBranchRepo bankProductBranchRepo;
 	private final BankBranchRepo bankBranchRepo;
 	private final GlobalCodeService globalCodeService;
 	private final GLSubCategoryService gLSubCategoryService;
@@ -249,28 +247,28 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 	@Override
 	public List<DemandDraftProductBranchDto> findBranchesByProductCode(String productCode) {
 		
-		List<DemandDraftProductBranchDto> officeProductBranchDtos = new ArrayList<DemandDraftProductBranchDto>();
+		List<DemandDraftProductBranchDto> demandDraftProductBranchDtos = new ArrayList<DemandDraftProductBranchDto>();
 		
 		List<BankProductBranch> bankProductBranches = bankProductBranchRepo.findAllByProductCodeIgnoreCase(productCode);
 		for(BankProductBranch bankProductBranch : bankProductBranches) {
 			String branchCode = bankProductBranch.getBranchCode() != null ? bankProductBranch.getBranchCode().trim() : "";
 			Optional<BankBranch> optional = bankBranchRepo.findFirstByBranchCodeIgnoreCase(branchCode);
 			if(optional.isPresent()) {
-				DemandDraftProductBranchDto officeProductBranchDto = DemandDraftProductBranchDto.builder()
+				DemandDraftProductBranchDto demandDraftProductBranchDto = DemandDraftProductBranchDto.builder()
 					.branchCode(branchCode)
 					.description(optional.get().getShortName())
 					.build();
-				officeProductBranchDtos.add(officeProductBranchDto);				
+				demandDraftProductBranchDtos.add(demandDraftProductBranchDto);				
 			}
 		}
-		return officeProductBranchDtos;
+		return demandDraftProductBranchDtos;
 	}
 
 	@Override
 	public List<DemandDraftProductCurrencyDto> findCurrenciesByProductCode(String productCode) {
 		
-		List<DemandDraftProductCurrencyDto> officeProductCurrencyDtos = demandDraftProductRepository.findCurrencyDtoForProduct(productCode);		
-		return officeProductCurrencyDtos;
+		List<DemandDraftProductCurrencyDto> demandDraftProductCurrencyDtos = demandDraftProductRepository.findCurrencyDtoForProduct(productCode);		
+		return demandDraftProductCurrencyDtos;
 	}
 
 	@Override
@@ -278,7 +276,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 		Optional<DemandDraftProduct> optional = demandDraftProductRepository.findByProductCode(productCode);
 		if(optional.isPresent()) {
 			
-			DemandDraftProduct bankOfficeProduct = optional.get();
+			DemandDraftProduct bankDemandDraftProduct = optional.get();
 
 			//List<DemandDraftProductSpacerCode> demandDraftProductSpacerCodes = demandDraftSpacerCodeRepo.findAllByProductCode(productCode);
 			//List<String> spacerCodes = demandDraftProductSpacerCodes.stream().map(o -> o.getSpacerCode()).collect(Collectors.toList());
