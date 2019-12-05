@@ -37,11 +37,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -78,7 +77,10 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             description = "create demand draft product record",
             dtoClass = CreateDemandDraftProductDTO.class,
             returnClass = QueryDemandDraftProductDTO.class,
-            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = CreateDemandDraftProductDTO.class, validateMethod = "validate"))
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
+                    paramTypes = CreateDemandDraftProductDTO.class,
+                    validateMethod = "validate"
+            ))
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException{
 
 
@@ -146,6 +148,11 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found",productCode)));
+        if(dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())){
+            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true " );
+           throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
+
+        }
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
         demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
         BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
@@ -161,6 +168,11 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found",productCode)));
+        if(dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())){
+            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true " );
+            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
+
+        }
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
 
         UpdateDemandDraftProductWithDependenciesDTO update = new UpdateDemandDraftProductWithDependenciesDTO();
@@ -327,7 +339,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 			}
 		}
 		
-		
+
 		return demandDraftProductGlDtos;
 	}
 }

@@ -56,6 +56,48 @@ public class DemandDraftProduct extends BaseEntity {
 
     @Column(name = "dd_transfer_spacer")
     private String ddTransferSpacer;
+//new
+
+    @Column(name = "caution_state_period")
+    private String cautionStatePeriod;
+
+
+    @Column(name = "revalidate_period")
+    private String revalidatePeriod;
+
+
+    @Column(name = "allow_revalidate", nullable = false)
+    private boolean allowRevalidate;
+
+
+    @Column(name = "buy_exchange_rate_code")
+    private String buyExchangeRateCode;
+
+
+    @Column(name = "sell_exchange_rate_code")
+    private String sellExchangeRateCode;
+
+    @Column(name = "cash_transfer_allowed")
+    private boolean cashTransferAllowed;
+
+
+    @Column(name = "transfer_trans_allowed")
+    private boolean transferTransAllowed;
+
+
+    @Column(name = "custodian_print_allow")
+    private boolean custodianPrintAllow;
+
+
+    @Column(name = "dd_sequence_code")
+    private String ddSequenceCode;
+
+
+    @Column(name = "common_dd_account_id")
+    private String commonDDAccountId;
+
+
+
 
 
 
