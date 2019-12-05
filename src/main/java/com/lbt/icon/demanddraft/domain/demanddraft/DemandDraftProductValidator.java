@@ -34,7 +34,7 @@ public class DemandDraftProductValidator {
     private final FinancialInstitutionService financialInstitutionService;
     private final BankProductMasterValidator bankProductMasterValidator;
 
-    public void validateFields(Object obj) {
+    public void validateFields(Object obj) throws FieldValidationException {
         List<FieldValidationError> fieldValidationErrors =
                 CommonUtils.getStaticFieldValidationErrors(
                         obj,
@@ -45,7 +45,7 @@ public class DemandDraftProductValidator {
             return;
         }
 
-        throw new FieldValidationRuntimeException(fieldValidationErrors);
+        throw new FieldValidationException("Field validation error occur", fieldValidationErrors);
     }
 
     public void validate(CreateDemandDraftProductDTO dto) throws IconException{
@@ -54,6 +54,10 @@ public class DemandDraftProductValidator {
         );
         try {
             validateBankProductMaster(dto.getBankProduct(),fieldValidationErrors);
+            if(dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())){
+                FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true " );
+                fieldValidationErrors.add(error);
+            }
         } catch (FieldValidationException e) {
 
             e.printStackTrace();
