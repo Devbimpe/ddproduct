@@ -65,7 +65,7 @@ public class DemandDraftProductValidator {
         }
         validateFields(dto.getDemandDraftProduct());
         validateProductCode(dto.getBankProduct().getProductCode(), fieldValidationErrors);
-//        validateInventoryCategory(dto.getDemandDraftProduct().getInventoryCategory(), fieldValidationErrors);
+//        validateInventoryCategory(dto.getDemandDraftProduct().getInventoryType(), fieldValidationErrors);
 //        validateIssueBankAndBranch(dto, fieldValidationErrors);
 //        validateDemandDraftType(dto);
         validateCurrencyRate(dto, fieldValidationErrors);
@@ -127,14 +127,14 @@ public class DemandDraftProductValidator {
         }
     }
 
-//    private void validateInventoryCategory(String inventoryCategory, List<FieldValidationError> fieldValidationErrors) {
-//        if (!StringUtils.isEmpty(inventoryCategory))
+//    private void validateInventoryCategory(String inventoryType, List<FieldValidationError> fieldValidationErrors) {
+//        if (!StringUtils.isEmpty(inventoryType))
 //        {
 //            Boolean inventoryCategoryCodeExists = globalCodeService.existsByTypeAndCode(
-//                    "INSTRUMENT_CATEGORY", inventoryCategory);
+//                    "INSTRUMENT_CATEGORY", inventoryType);
 //
 //            if (!inventoryCategoryCodeExists) {
-//                FieldValidationError error = new FieldValidationError("inventoryCategory", "Inventory category not found-> " + inventoryCategory);
+//                FieldValidationError error = new FieldValidationError("inventoryType", "Inventory category not found-> " + inventoryType);
 //                fieldValidationErrors.add(error);
 //            }
 //        }

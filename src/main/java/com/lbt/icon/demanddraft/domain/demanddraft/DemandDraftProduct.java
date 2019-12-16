@@ -32,8 +32,8 @@ public class DemandDraftProduct extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DemandDraftType demandDraftType;
 
-    @Column(name = "inventory_category")
-    private String inventoryCategory;
+    @Column(name = "inventory_type")
+    private String inventoryType;
 
     @Column(name = "issue_bank")
     private String issueBank;

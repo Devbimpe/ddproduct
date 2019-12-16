@@ -7,7 +7,7 @@
     <groupId>com.lbt.icon</groupId>
     <artifactId>demanddraft</artifactId>
 
-    <version>0.1.14</version>
+    <version>0.1.15</version>
 
     <name>demanddraft</name>
     <description>Demand draft project</description>
