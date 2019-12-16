@@ -31,7 +31,7 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
 
 //    private DemandDraftType demandDraftType;
 //
-//    private String inventoryCategory;
+//    private String inventoryType;
 //
 //    private String issueBank;
 //
