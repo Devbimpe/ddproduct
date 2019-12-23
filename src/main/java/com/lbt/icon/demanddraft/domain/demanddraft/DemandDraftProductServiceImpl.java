@@ -4,19 +4,20 @@ import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranch;
 import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranchRepo;
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.dto.GlobalCodeDTO;
+import com.lbt.icon.bankcommons.domain.nextnumbergenerator.NextNumberGeneratorService;
+import com.lbt.icon.bankcommons.domain.nextnumbergenerator.dto.NextNumberGeneratorCodeDTO;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranch;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranchRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
-import com.lbt.icon.bankproduct.domain.office.BankOfficeProductService;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.exception.*;
+import com.lbt.icon.demanddraft.config.DDProductPermissionEnum;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
-import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesRepository;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesService;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.QueryDemandDraftProductChargesDTO;
@@ -36,11 +37,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,20 +59,22 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = Exception.class)
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
-    private final DemandDraftProductRepository demandDraftProductRepository;
-    private final DemandDraftProductValidator demandDraftProductValidator;
-    private final ModelMapper modelMapper;
-    private final BankProductMasterService bankProductMasterService;
+    private final BankBranchRepo bankBranchRepo;
+    private final BankProductBranchRepo bankProductBranchRepo;
+    private final BankProductGLRepo bankProductGLRepo;
     private final BankProductMasterRepo bankProductMasterRepo;
+    private final BankProductMasterService bankProductMasterService;
     private final DemandDraftProductChargesService demandDraftProductChargesService;
     private final DemandDraftProductInstrService demandDraftProductInstrService;
+    private final DemandDraftProductRepository demandDraftProductRepository;
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
-    private final BankOfficeProductService bankOfficeProductService;
-    private final BankProductBranchRepo bankProductBranchRepo;
-	private final BankBranchRepo bankBranchRepo;
-	private final GlobalCodeService globalCodeService;
-	private final GLSubCategoryService gLSubCategoryService;
-	private final BankProductGLRepo bankProductGLRepo;
+
+    private final DemandDraftProductValidator demandDraftProductValidator;
+    private final GLSubCategoryService gLSubCategoryService;
+    private final GlobalCodeService globalCodeService;
+    private final ModelMapper modelMapper;
+    private final NextNumberGeneratorService nextNumberGeneratorService;
+
 
     @Override
     @Checkable(
@@ -78,31 +84,43 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             description = "create demand draft product record",
             dtoClass = CreateDemandDraftProductDTO.class,
             returnClass = QueryDemandDraftProductDTO.class,
-            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = CreateDemandDraftProductDTO.class, validateMethod = "validate"))
-    public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException{
-            BankProductMasterDTO bpm = null;
-            demandDraftProductValidator.validate(dto);
-            QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
-            bpm = bankProductMasterService.create(dto.getBankProduct());
-            String productCode = bpm.getProductCode();
-            dto.getDemandDraftProduct().setProductCode(productCode);
-            for (DemandDraftProductChargesDTO charge : dto.getDemandDraftProductCharges()) {
-                charge.setProductCode(productCode);
-                demandDraftProductChargesService.create(charge);
-            }
-            for (DemandDraftProductInstrDTO instr : dto.getDemandDraftProductInstruments()) {
-                instr.setProductCode(productCode);
-                demandDraftProductInstrService.create(instr);
-            }
-            for (DemandDraftProductTranCodeLimitDTO tranCodeLim : dto.getDemandDraftProductTranCodeLimits()) {
-                tranCodeLim.setProductCode(productCode);
-                demandDraftProductTranCodeLimitService.create(tranCodeLim);
-            }
-            DemandDraftProduct demandDraftProduct = modelMapper.map(dto.getDemandDraftProduct(), DemandDraftProduct.class);
-            queryDemandDraftProductDTO = new QueryDemandDraftProductDTO();
-            queryDemandDraftProductDTO.setBankProductMasterDTO(bpm);
-            modelMapper.map(demandDraftProductRepository.create(demandDraftProduct), queryDemandDraftProductDTO);
-            return queryDemandDraftProductDTO;
+
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
+                    paramTypes = CreateDemandDraftProductDTO.class,
+                    validateMethod = "validate"
+            ))
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
+    public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
+        NextNumberGeneratorCodeDTO nextNumberGeneratorCodeDTO = NextNumberGeneratorCodeDTO.
+                builder()
+                .code(dto.getBankProduct().getAccountNoGenCode())
+                .productCode(dto.getBankProduct().getProductCode())
+                .build();
+        BankProductMasterDTO bpm = null;
+        demandDraftProductValidator.validate(dto);
+        dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
+        QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
+        bpm = bankProductMasterService.create(dto.getBankProduct());
+        String productCode = bpm.getProductCode();
+        dto.getDemandDraftProduct().setProductCode(productCode);
+        for (DemandDraftProductChargesDTO charge : dto.getDemandDraftProductCharges()) {
+            charge.setProductCode(productCode);
+            demandDraftProductChargesService.create(charge);
+        }
+        for (DemandDraftProductInstrDTO instr : dto.getDemandDraftProductInstruments()) {
+            instr.setProductCode(productCode);
+            demandDraftProductInstrService.create(instr);
+        }
+        for (DemandDraftProductTranCodeLimitDTO tranCodeLim : dto.getDemandDraftProductTranCodeLimits()) {
+            tranCodeLim.setProductCode(productCode);
+            demandDraftProductTranCodeLimitService.create(tranCodeLim);
+        }
+        DemandDraftProduct demandDraftProduct = modelMapper.map(dto.getDemandDraftProduct(), DemandDraftProduct.class);
+        queryDemandDraftProductDTO = new QueryDemandDraftProductDTO();
+        queryDemandDraftProductDTO.setBankProductMasterDTO(bpm);
+        modelMapper.map(demandDraftProductRepository.create(demandDraftProduct), queryDemandDraftProductDTO);
+        return queryDemandDraftProductDTO;
+
 
     }
 
@@ -110,7 +128,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     public DemandDraftProductInquiryDTO inquireByProductCode(String productCode) throws IconException {
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Demand Draft Product %s Not found",productCode)));
+                new EntityNotFoundException(String.format("Demand Draft Product %s Not found", productCode)));
 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
@@ -122,14 +140,14 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
-        demandDraftProductInquiryDTO.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
+        demandDraftProductInquiryDTO.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
         return demandDraftProductInquiryDTO;
     }
 
     @Override
     public DemandDraftProductInquiryDTO findById(Long id) throws IconException {
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
-        DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByIdOrThrow(id, new EntityNotFoundException(String.format("Demand Draft Product %s Not found",id)).toString());
+        DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByIdOrThrow(id, new EntityNotFoundException(String.format("Demand Draft Product %s Not found", id)).toString());
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(demandDraftProduct.getProductCode());
@@ -137,52 +155,56 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
-        demandDraftProductInquiryDTO.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
+        demandDraftProductInquiryDTO.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
         return demandDraftProductInquiryDTO;
     }
 
-    @Override
-    @Checkable(
-            naturalIdentifier = "naturalId",
-            code = "UPDATE_DEMAND_DRAFT",
-            operation = Checkable.Operation.Update,
-            description = "update demand draft product record",
-            dtoClass = UpdateDemandDraftProductDTO.class,
-            returnClass = UpdateDemandDraftProductDTO.class,
-            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = {Long.class,UpdateDemandDraftProductDTO.class}, validateMethod = "validate"))
-    public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException{
+
+
+    public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found",productCode)));
+                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
+        if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
+            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true ");
+            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
+
+        }
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
-        demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
+        demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
         BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
         UpdateDemandDraftProductDTO update = new UpdateDemandDraftProductDTO();
-        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
-        update.setBankProduct(modelMapper.map(bankProductMasterDTO,UpdateBankProductMasterDTO.class));
+        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
+        update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
 
         return update;
     }
 
     @Override
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(UpdateDemandDraftProductWithDependenciesDTO dto, String productCode) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found",productCode)));
+                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
+        if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
+            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true ");
+            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
+
+        }
+
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
 
         UpdateDemandDraftProductWithDependenciesDTO update = new UpdateDemandDraftProductWithDependenciesDTO();
-        demandDraftProduct=demandDraftProductRepository.update(demandDraftProduct);
+        demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
         BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
-        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct,QueryDemandDraftProductDTO.class));
-        update.setBankProduct(modelMapper.map(bankProductMasterDTO,UpdateBankProductMasterDTO.class));
-        update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(),productCode));
-        update.setDemandDraftProductInstruments(this.updateInstrument(dto.getDemandDraftProductInstruments(),productCode));
-        update.setDemandDraftProductTranCodeLimits(this.updateTranCode(dto.getDemandDraftProductTranCodeLimits(),productCode));
+        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
+        update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
+        update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(), productCode));
+        update.setDemandDraftProductInstruments(this.updateInstrument(dto.getDemandDraftProductInstruments(), productCode));
+        update.setDemandDraftProductTranCodeLimits(this.updateTranCode(dto.getDemandDraftProductTranCodeLimits(), productCode));
 
         return update;
     }
-
 
 
     @Override
@@ -216,126 +238,120 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     public List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode) {
         List<DemandDraftProduct> demandDraftProducts = demandDraftProductRepository.findByProductCodeContaining(productCode.toUpperCase());
         List<BankProductMasterDTO> masterDtos = new ArrayList<>();
-        for(DemandDraftProduct d : demandDraftProducts) {
-            bankProductMasterService.findByProductCode(d.getProductCode()).ifPresent(m->masterDtos.add(m));
+        for (DemandDraftProduct d : demandDraftProducts) {
+            bankProductMasterService.findByProductCode(d.getProductCode()).ifPresent(m -> masterDtos.add(m));
         }
         return masterDtos;
 
     }
 
-
-    private List<QueryDemandDraftProductTranCodeLimitDTO> updateTranCode(List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits, String productCode) throws IconException{
-        return demandDraftProductTranCodeLimitService.updateTranCodeBatch(productCode,demandDraftProductTranCodeLimits);
+    @Override
+    public String getAccountNumberGenCodeByProductCode(String productCode) {
+        Optional<String> optional = bankProductMasterRepo.getAcctGenCodeUsingProductCode(productCode);
+        return optional.isPresent() ? optional.get().trim() : "";
     }
 
-    private List<QueryDemandDraftProductInstrDTO> updateInstrument(List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments, String productCode) throws IconException{
-        return demandDraftProductInstrService.updateInstrBatch(productCode,demandDraftProductInstruments);
+    @Override
+    public boolean hasAccountNumberGenCode(String productCode) {
+        String genCode = getAccountNumberGenCodeByProductCode(productCode);
+        return !genCode.isEmpty();
     }
 
-    private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException{
-        return  demandDraftProductChargesService.updateChargeBatch(productCode,demandDraftProductCharges);
+    @Override
+    public List<DemandDraftProductBranchDto> findBranchesByProductCode(String productCode) {
+
+        List<DemandDraftProductBranchDto> demandDraftProductBranchDtos = new ArrayList<DemandDraftProductBranchDto>();
+
+        List<BankProductBranch> bankProductBranches = bankProductBranchRepo.findAllByProductCodeIgnoreCase(productCode);
+        for (BankProductBranch bankProductBranch : bankProductBranches) {
+            String branchCode = bankProductBranch.getBranchCode() != null ? bankProductBranch.getBranchCode().trim() : "";
+            Optional<BankBranch> optional = bankBranchRepo.findFirstByBranchCodeIgnoreCase(branchCode);
+            if (optional.isPresent()) {
+                DemandDraftProductBranchDto demandDraftProductBranchDto = DemandDraftProductBranchDto.builder()
+                        .branchCode(branchCode)
+                        .description(optional.get().getShortName())
+                        .build();
+                demandDraftProductBranchDtos.add(demandDraftProductBranchDto);
+            }
+        }
+        return demandDraftProductBranchDtos;
     }
-    
+
+    @Override
+    public List<DemandDraftProductCurrencyDto> findCurrenciesByProductCode(String productCode) {
+
+        List<DemandDraftProductCurrencyDto> demandDraftProductCurrencyDtos = demandDraftProductRepository.findCurrencyDtoForProduct(productCode);
+        return demandDraftProductCurrencyDtos;
+    }
+
+    @Override
+    public List<DemandDraftProductSpacerCodeDto> findSpacersByProductCode(String productCode) {
+        Optional<DemandDraftProduct> optional = demandDraftProductRepository.findByProductCode(productCode);
+        if (optional.isPresent()) {
+
+            DemandDraftProduct bankDemandDraftProduct = optional.get();
+
+            //List<DemandDraftProductSpacerCode> demandDraftProductSpacerCodes = demandDraftSpacerCodeRepo.findAllByProductCode(productCode);
+            //List<String> spacerCodes = demandDraftProductSpacerCodes.stream().map(o -> o.getSpacerCode()).collect(Collectors.toList());
+            List<String> spacerCodes = new ArrayList<String>(); // above line PENDING implementation
+            List<DemandDraftProductSpacerCodeDto> demandDraftProductSpacerCodeDtos = new ArrayList<>();
+            for (String spacerCode : spacerCodes) {
+
+                GlobalCodeDTO globalCodeDto = null;
+                try {
+                    globalCodeDto = globalCodeService.findByTypeAndCode("SPACER", spacerCode);
+                } catch (IconQueryException e) {
+                }
+                String description = (globalCodeDto != null ? globalCodeDto.getDescription() : "");
+                DemandDraftProductSpacerCodeDto demandDraftProductSpacerDto = DemandDraftProductSpacerCodeDto.builder()
+                        .spacerCode(spacerCode)
+                        .description(description)
+                        .build();
+                demandDraftProductSpacerCodeDtos.add(demandDraftProductSpacerDto);
+            }
+            return demandDraftProductSpacerCodeDtos;
+        } else
+            return new ArrayList<>();
+    }
+
+    @Override
+    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
+
+        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
+
+        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
+        for (BankProductGL bankProductGl : bankProductGls) {
+            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
+            Optional<GLSubCategoryDto> optional = null;
+            try {
+                optional = gLSubCategoryService.findFirstByCode(glSubCode);
+
+                if (optional.isPresent()) {
+                    demandDraftProductGlDtos.add(
+                            DemandDraftProductGlDto.builder()
+                                    .glSubCode(glSubCode)
+                                    .description(optional.get().getDescription())
+                                    .build()
+                    );
+                }
+            } catch (EntityNotFoundException iqe) {
+            } catch (IconQueryException iqe) {
+            }
+        }
 
 
-	
+        return demandDraftProductGlDtos;
+    }
 
-	@Override
-	public boolean hasAccountNumberGenCode(String productCode) {
-		String genCode = getAccountNumberGenCodeByProductCode(productCode);
-		return !genCode.isEmpty();
-	}
-	
-	@Override
-	public String getAccountNumberGenCodeByProductCode(String productCode) {
-		Optional<String> optional = bankProductMasterRepo.getAcctGenCodeUsingProductCode(productCode);
-		return optional.isPresent() ? optional.get().trim() : "";
-	}
+    private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException {
+        return demandDraftProductChargesService.updateChargeBatch(productCode, demandDraftProductCharges);
+    }
 
-	@Override
-	public List<DemandDraftProductBranchDto> findBranchesByProductCode(String productCode) {
-		
-		List<DemandDraftProductBranchDto> demandDraftProductBranchDtos = new ArrayList<DemandDraftProductBranchDto>();
-		
-		List<BankProductBranch> bankProductBranches = bankProductBranchRepo.findAllByProductCodeIgnoreCase(productCode);
-		for(BankProductBranch bankProductBranch : bankProductBranches) {
-			String branchCode = bankProductBranch.getBranchCode() != null ? bankProductBranch.getBranchCode().trim() : "";
-			Optional<BankBranch> optional = bankBranchRepo.findFirstByBranchCodeIgnoreCase(branchCode);
-			if(optional.isPresent()) {
-				DemandDraftProductBranchDto demandDraftProductBranchDto = DemandDraftProductBranchDto.builder()
-					.branchCode(branchCode)
-					.description(optional.get().getShortName())
-					.build();
-				demandDraftProductBranchDtos.add(demandDraftProductBranchDto);				
-			}
-		}
-		return demandDraftProductBranchDtos;
-	}
+    private List<QueryDemandDraftProductInstrDTO> updateInstrument(List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments, String productCode) throws IconException {
+        return demandDraftProductInstrService.updateInstrBatch(productCode, demandDraftProductInstruments);
+    }
 
-	@Override
-	public List<DemandDraftProductCurrencyDto> findCurrenciesByProductCode(String productCode) {
-		
-		List<DemandDraftProductCurrencyDto> demandDraftProductCurrencyDtos = demandDraftProductRepository.findCurrencyDtoForProduct(productCode);		
-		return demandDraftProductCurrencyDtos;
-	}
-
-	@Override
-	public List<DemandDraftProductSpacerCodeDto> findSpacersByProductCode(String productCode) {
-		Optional<DemandDraftProduct> optional = demandDraftProductRepository.findByProductCode(productCode);
-		if(optional.isPresent()) {
-			
-			DemandDraftProduct bankDemandDraftProduct = optional.get();
-
-			//List<DemandDraftProductSpacerCode> demandDraftProductSpacerCodes = demandDraftSpacerCodeRepo.findAllByProductCode(productCode);
-			//List<String> spacerCodes = demandDraftProductSpacerCodes.stream().map(o -> o.getSpacerCode()).collect(Collectors.toList());
-			List<String> spacerCodes = new ArrayList<String>(); // above line PENDING implementation
-			List<DemandDraftProductSpacerCodeDto> demandDraftProductSpacerCodeDtos = new ArrayList<>();
-			for(String spacerCode : spacerCodes) {
-				
-				GlobalCodeDTO globalCodeDto = null;
-				try {
-					globalCodeDto = globalCodeService.findByTypeAndCode("SPACER", spacerCode);
-				} catch (IconQueryException e) {					
-				}
-				String description = (globalCodeDto != null ? globalCodeDto.getDescription() : "");				
-				DemandDraftProductSpacerCodeDto demandDraftProductSpacerDto = DemandDraftProductSpacerCodeDto.builder()
-					.spacerCode(spacerCode)
-					.description(description)
-					.build();
-				demandDraftProductSpacerCodeDtos.add(demandDraftProductSpacerDto);
-			}
-			return demandDraftProductSpacerCodeDtos;
-		}
-		else
-			return new ArrayList<>();
-	}
-
-	@Override
-	public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
-		
-		List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
-		
-		List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
-		for(BankProductGL bankProductGl : bankProductGls) {
-			String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";			
-			Optional<GLSubCategoryDto> optional = null;
-			try {
-				optional = gLSubCategoryService.findFirstByCode(glSubCode);
-				
-				if(optional.isPresent()) {
-					demandDraftProductGlDtos.add(
-						DemandDraftProductGlDto.builder()
-							.glSubCode(glSubCode)
-							.description(optional.get().getDescription())
-							.build()
-					);
-				}
-			} catch (EntityNotFoundException iqe) {				
-			} catch (IconQueryException iqe) {				
-			}
-		}
-		
-		
-		return demandDraftProductGlDtos;
-	}
+    private List<QueryDemandDraftProductTranCodeLimitDTO> updateTranCode(List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits, String productCode) throws IconException {
+        return demandDraftProductTranCodeLimitService.updateTranCodeBatch(productCode, demandDraftProductTranCodeLimits);
+    }
 }
