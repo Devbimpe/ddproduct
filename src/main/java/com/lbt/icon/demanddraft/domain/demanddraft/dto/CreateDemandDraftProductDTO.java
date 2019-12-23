@@ -7,7 +7,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.Deman
 import lombok.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
+
 
 /**
  * @author devbimpe

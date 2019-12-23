@@ -10,6 +10,7 @@ import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
+import com.lbt.icon.bankproduct.domain.office.BankOfficeProductService;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
@@ -62,7 +63,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductChargesService demandDraftProductChargesService;
     private final DemandDraftProductInstrService demandDraftProductInstrService;
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
-    private final DemandDraftProductChargesRepository demanddraftProductChargesRepository;
+    private final BankOfficeProductService bankOfficeProductService;
     private final BankProductBranchRepo bankProductBranchRepo;
 	private final BankBranchRepo bankBranchRepo;
 	private final GlobalCodeService globalCodeService;
@@ -70,7 +71,6 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 	private final BankProductGLRepo bankProductGLRepo;
 
     @Override
-
     @Checkable(
             naturalIdentifier = "naturalId",
             code = "CREATE_DEMAND_DRAFT",
@@ -80,8 +80,6 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             returnClass = QueryDemandDraftProductDTO.class,
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = CreateDemandDraftProductDTO.class, validateMethod = "validate"))
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException{
-
-
             BankProductMasterDTO bpm = null;
             demandDraftProductValidator.validate(dto);
             QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
@@ -117,8 +115,10 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
+
         bankProductMasterService.findAllByProductCode(productCode).ifPresent(d ->
                 demandDraftProductInquiryDTO.setBankProduct(d));
+
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
@@ -142,6 +142,14 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
+    @Checkable(
+            naturalIdentifier = "naturalId",
+            code = "UPDATE_DEMAND_DRAFT",
+            operation = Checkable.Operation.Update,
+            description = "update demand draft product record",
+            dtoClass = UpdateDemandDraftProductDTO.class,
+            returnClass = UpdateDemandDraftProductDTO.class,
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class, paramTypes = {Long.class,UpdateDemandDraftProductDTO.class}, validateMethod = "validate"))
     public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException{
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
