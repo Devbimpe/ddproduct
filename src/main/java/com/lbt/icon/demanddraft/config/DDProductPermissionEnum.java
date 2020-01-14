@@ -5,6 +5,8 @@ import com.lbt.icon.base.security.domain.role.rolepermissions.permission.Permiss
 import com.lbt.icon.base.security.domain.role.rolepermissions.permission.ResourceType;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 public enum DDProductPermissionEnum implements PermissionSource {
 	
@@ -28,6 +30,11 @@ public enum DDProductPermissionEnum implements PermissionSource {
 		this.resourceType = resourceType;
 	}
 
+	@Override
+	public List<String> getDependentPermissions() {
+		return null;
+	}
+
 	@NoArgsConstructor(access=AccessLevel.PRIVATE)
 	public class Authority {
 		public static final String CREATE_DD_PRODUCT = "CREATE_DD_PRODUCT";
@@ -38,4 +45,6 @@ public enum DDProductPermissionEnum implements PermissionSource {
 	public class PermissionConstants {
 		public static final String DD_PRODUCT_RULE_NAME = "Demand draft rule";
 	}
+
+
 }
