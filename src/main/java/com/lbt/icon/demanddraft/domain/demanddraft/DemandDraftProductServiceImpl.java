@@ -91,14 +91,14 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
-        NextNumberGeneratorCodeDTO nextNumberGeneratorCodeDTO = NextNumberGeneratorCodeDTO.
-                builder()
-                .code(dto.getBankProduct().getAccountNoGenCode())
-                .productCode(dto.getBankProduct().getProductCode())
-                .build();
+//        NextNumberGeneratorCodeDTO nextNumberGeneratorCodeDTO = NextNumberGeneratorCodeDTO.
+//                builder()
+//                .code(dto.getBankProduct().getAccountNoGenCode())
+//                .productCode(dto.getBankProduct().getProductCode())
+//                .build();
         BankProductMasterDTO bpm = null;
         demandDraftProductValidator.validate(dto);
-        dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
+      //  dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
         QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
         bpm = bankProductMasterService.create(dto.getBankProduct());
         String productCode = bpm.getProductCode();
@@ -314,34 +314,34 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             return new ArrayList<>();
     }
 
-    @Override
-    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
-
-        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
-
-        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
-        for (BankProductGL bankProductGl : bankProductGls) {
-            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
-            Optional<GLSubCategoryDto> optional = null;
-            try {
-                optional = gLSubCategoryService.findFirstByCode(glSubCode);
-
-                if (optional.isPresent()) {
-                    demandDraftProductGlDtos.add(
-                            DemandDraftProductGlDto.builder()
-                                    .glSubCode(glSubCode)
-                                    .description(optional.get().getDescription())
-                                    .build()
-                    );
-                }
-            } catch (EntityNotFoundException iqe) {
-            } catch (IconQueryException iqe) {
-            }
-        }
-
-
-        return demandDraftProductGlDtos;
-    }
+//    @Override
+//    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
+//
+//        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
+//
+//        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
+//        for (BankProductGL bankProductGl : bankProductGls) {
+//            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
+//            Optional<GLSubCategoryDto> optional = null;
+//            try {
+//                optional = gLSubCategoryService.findFirstByCode(glSubCode);
+//
+//                if (optional.isPresent()) {
+//                    demandDraftProductGlDtos.add(
+//                            DemandDraftProductGlDto.builder()
+//                                    .glSubCode(glSubCode)
+//                                    .description(optional.get().getDescription())
+//                                    .build()
+//                    );
+//                }
+//            } catch (EntityNotFoundException iqe) {
+//            } catch (IconQueryException iqe) {
+//            }
+//        }
+//
+//
+//        return demandDraftProductGlDtos;
+//    }
 
     private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException {
         return demandDraftProductChargesService.updateChargeBatch(productCode, demandDraftProductCharges);
