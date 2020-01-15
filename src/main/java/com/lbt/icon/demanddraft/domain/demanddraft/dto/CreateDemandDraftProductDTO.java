@@ -1,6 +1,7 @@
 package com.lbt.icon.demanddraft.domain.demanddraft.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.bankproduct.domain.master.dto.AddBankProductMasterDTO;
+import com.lbt.icon.core.domain.BaseQueryDto;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.DemandDraftProductInstrDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
@@ -18,6 +19,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 public class CreateDemandDraftProductDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @NotNull
     private AddBankProductMasterDTO bankProduct;
