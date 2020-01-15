@@ -163,23 +163,23 @@ public class DemandDraftProductController {
     		HttpStatus.OK);
     }
 
-	@GetMapping("/{productCode}/findglcodes")
-    public ResponseEntity<?> findGlsByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {
-		
-		List<DemandDraftProductGlDto> queryDtos = demandDraftProductService.findGlsByProductCode(productCode); 	
-    	return new ResponseEntity<>(
-    		new ApiResponseBase<>(
-    			queryDtos,
-    			HttpStatus.OK.name(),
-    			false,
-    			null,
-    			null,
-    			null,
-    			null,
-    			null,
-    			null), 
-    		HttpStatus.OK);
-    }
+//	@GetMapping("/{productCode}/findglcodes")
+//    public ResponseEntity<?> findGlsByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {
+//
+//		List<DemandDraftProductGlDto> queryDtos = demandDraftProductService.findGlsByProductCode(productCode);
+//    	return new ResponseEntity<>(
+//    		new ApiResponseBase<>(
+//    			queryDtos,
+//    			HttpStatus.OK.name(),
+//    			false,
+//    			null,
+//    			null,
+//    			null,
+//    			null,
+//    			null,
+//    			null),
+//    		HttpStatus.OK);
+//    }
 }
 
 

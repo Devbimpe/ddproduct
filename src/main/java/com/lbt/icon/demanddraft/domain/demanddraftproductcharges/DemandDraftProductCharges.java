@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Audited
 @Entity
-@Table(name = "demand_draft_prod_charges")
+@Table(schema = "bankcore", name = "demand_draft_prod_charges")
 public class DemandDraftProductCharges extends BaseEntity {
 
     @NotNull(message = "")

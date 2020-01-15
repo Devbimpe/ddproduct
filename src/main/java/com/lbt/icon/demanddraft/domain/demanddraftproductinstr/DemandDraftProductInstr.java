@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Audited
 @Entity
-@Table(name = "demand_draft_prod_instr")
+@Table(schema = "bankcore", name = "demand_draft_prod_instr")
 public class DemandDraftProductInstr extends BaseEntity {
 
     @NotNull

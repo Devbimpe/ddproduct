@@ -16,8 +16,8 @@ import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.exception.*;
+import com.lbt.icon.demanddraft.config.DDProductPermissionEnum;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
-import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesRepository;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesService;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.QueryDemandDraftProductChargesDTO;
@@ -37,6 +37,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -67,15 +68,15 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductInstrService demandDraftProductInstrService;
     private final DemandDraftProductRepository demandDraftProductRepository;
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
+
     private final DemandDraftProductValidator demandDraftProductValidator;
-    private final DemandDraftProductChargesRepository demanddraftProductChargesRepository;
     private final GLSubCategoryService gLSubCategoryService;
     private final GlobalCodeService globalCodeService;
     private final ModelMapper modelMapper;
     private final NextNumberGeneratorService nextNumberGeneratorService;
 
-    @Override
 
+    @Override
     @Checkable(
             naturalIdentifier = "naturalId",
             code = "CREATE_DEMAND_DRAFT",
@@ -83,20 +84,21 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             description = "create demand draft product record",
             dtoClass = CreateDemandDraftProductDTO.class,
             returnClass = QueryDemandDraftProductDTO.class,
+
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
                     paramTypes = CreateDemandDraftProductDTO.class,
                     validateMethod = "validate"
             ))
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
-
-        NextNumberGeneratorCodeDTO nextNumberGeneratorCodeDTO = NextNumberGeneratorCodeDTO.
-                builder()
-                .code(dto.getBankProduct().getAccountNoGenCode())
-                .productCode(dto.getBankProduct().getProductCode())
-                .build();
+//        NextNumberGeneratorCodeDTO nextNumberGeneratorCodeDTO = NextNumberGeneratorCodeDTO.
+//                builder()
+//                .code(dto.getBankProduct().getAccountNoGenCode())
+//                .productCode(dto.getBankProduct().getProductCode())
+//                .build();
         BankProductMasterDTO bpm = null;
         demandDraftProductValidator.validate(dto);
-        dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
+      //  dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
         QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
         bpm = bankProductMasterService.create(dto.getBankProduct());
         String productCode = bpm.getProductCode();
@@ -119,6 +121,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         modelMapper.map(demandDraftProductRepository.create(demandDraftProduct), queryDemandDraftProductDTO);
         return queryDemandDraftProductDTO;
 
+
     }
 
     @Override
@@ -130,8 +133,10 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
+
         bankProductMasterService.findAllByProductCode(productCode).ifPresent(d ->
                 demandDraftProductInquiryDTO.setBankProduct(d));
+
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
@@ -154,7 +159,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         return demandDraftProductInquiryDTO;
     }
 
-    @Override
+
+
     public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
@@ -175,6 +181,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(UpdateDemandDraftProductWithDependenciesDTO dto, String productCode) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
@@ -307,34 +314,34 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             return new ArrayList<>();
     }
 
-    @Override
-    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
-
-        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
-
-        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
-        for (BankProductGL bankProductGl : bankProductGls) {
-            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
-            Optional<GLSubCategoryDto> optional = null;
-            try {
-                optional = gLSubCategoryService.findFirstByCode(glSubCode);
-
-                if (optional.isPresent()) {
-                    demandDraftProductGlDtos.add(
-                            DemandDraftProductGlDto.builder()
-                                    .glSubCode(glSubCode)
-                                    .description(optional.get().getDescription())
-                                    .build()
-                    );
-                }
-            } catch (EntityNotFoundException iqe) {
-            } catch (IconQueryException iqe) {
-            }
-        }
-
-
-        return demandDraftProductGlDtos;
-    }
+//    @Override
+//    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
+//
+//        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
+//
+//        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
+//        for (BankProductGL bankProductGl : bankProductGls) {
+//            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
+//            Optional<GLSubCategoryDto> optional = null;
+//            try {
+//                optional = gLSubCategoryService.findFirstByCode(glSubCode);
+//
+//                if (optional.isPresent()) {
+//                    demandDraftProductGlDtos.add(
+//                            DemandDraftProductGlDto.builder()
+//                                    .glSubCode(glSubCode)
+//                                    .description(optional.get().getDescription())
+//                                    .build()
+//                    );
+//                }
+//            } catch (EntityNotFoundException iqe) {
+//            } catch (IconQueryException iqe) {
+//            }
+//        }
+//
+//
+//        return demandDraftProductGlDtos;
+//    }
 
     private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException {
         return demandDraftProductChargesService.updateChargeBatch(productCode, demandDraftProductCharges);
