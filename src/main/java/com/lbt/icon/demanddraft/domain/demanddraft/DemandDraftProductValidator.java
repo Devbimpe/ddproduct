@@ -5,6 +5,7 @@ package com.lbt.icon.demanddraft.domain.demanddraft;
 import com.lbt.icon.bankcommons.domain.common.currencyrate.CurrencyRateService;
 import com.lbt.icon.bankcommons.domain.company.financialinstitution.FinancialInstitutionService;
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
+import com.lbt.icon.bankcommons.domain.nextnumbergenerator.NextNumberGeneratorService;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
 import com.lbt.icon.bankproduct.domain.master.dto.AddBankProductMasterDTO;
 import com.lbt.icon.core.exception.FieldValidationError;
@@ -33,6 +34,7 @@ public class DemandDraftProductValidator {
     private  final CurrencyRateService currencyRateService;
     private final FinancialInstitutionService financialInstitutionService;
     private final BankProductMasterValidator bankProductMasterValidator;
+    private final NextNumberGeneratorService nextNumberGeneratorService;
 
     public void validateFields(Object obj) throws FieldValidationException {
         List<FieldValidationError> fieldValidationErrors =
@@ -65,6 +67,14 @@ public class DemandDraftProductValidator {
         }
         validateFields(dto.getDemandDraftProduct());
         validateProductCode(dto.getBankProduct().getProductCode(), fieldValidationErrors);
+        if(!nextNumberGeneratorService.existsByCode(dto.getDemandDraftProduct().getDdSequenceCode())){
+            FieldValidationError error = new FieldValidationError("ddSequenceCode", "DD Sequence Code is not available " );
+            fieldValidationErrors.add(error);
+        }
+        if(!nextNumberGeneratorService.existsByCode(dto.getBankProduct().getAccountNoGenCode())){
+            FieldValidationError error = new FieldValidationError("accountNoGenCode", "Account No Gen Code Code is not available " );
+            fieldValidationErrors.add(error);
+        }
 //        validateInventoryCategory(dto.getDemandDraftProduct().getInventoryType(), fieldValidationErrors);
 //        validateIssueBankAndBranch(dto, fieldValidationErrors);
 //        validateDemandDraftType(dto);

@@ -98,7 +98,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 //                .build();
         BankProductMasterDTO bpm = null;
         demandDraftProductValidator.validate(dto);
-      //  dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
+       // dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
         QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
         bpm = bankProductMasterService.create(dto.getBankProduct());
         String productCode = bpm.getProductCode();
