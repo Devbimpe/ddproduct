@@ -67,7 +67,7 @@ public class DemandDraftProductDTO implements Serializable {
 
     private Boolean custodianPrintAllow;
 
-
+    @NotNull(message = "{demandDraft[NotNull.ddSequenceCode]}")
     private String ddSequenceCode;
 
 
