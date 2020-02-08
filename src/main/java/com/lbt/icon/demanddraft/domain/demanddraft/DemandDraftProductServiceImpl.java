@@ -161,6 +161,22 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
 
 
+
+
+    @Override
+    @Checkable(
+            naturalIdentifier = "naturalId",
+            code = "UPDATE_DEMAND_DRAFT",
+            operation = Checkable.Operation.Update,
+            description = "update demand draft product record",
+            dtoClass = UpdateDemandDraftProductDTO.class,
+            returnClass = UpdateDemandDraftProductDTO.class,
+
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
+                    paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
+                    validateMethod = "validate"
+            ))
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
