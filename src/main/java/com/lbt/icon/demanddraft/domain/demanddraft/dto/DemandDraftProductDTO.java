@@ -27,7 +27,7 @@ public class DemandDraftProductDTO implements Serializable {
 
     private DemandDraftType demandDraftType;
 
-    private String inventoryCategory;
+    private String inventoryType;
 
     private String issueBank;
 
@@ -61,13 +61,13 @@ public class DemandDraftProductDTO implements Serializable {
 
     private Boolean cashTransferAllowed;
 
-
+    @NotNull(message = "{demandDraft[NotNull.transferTransAllowed]}")
     private Boolean transferTransAllowed;
 
 
     private Boolean custodianPrintAllow;
 
-
+    @NotNull(message = "{demandDraft[NotNull.ddSequenceCode]}")
     private String ddSequenceCode;
 
 

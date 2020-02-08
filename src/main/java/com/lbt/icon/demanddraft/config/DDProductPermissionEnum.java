@@ -1,8 +1,9 @@
 package com.lbt.icon.demanddraft.config;
 
-import com.lbt.icon.base.security.domain.role.rolepermissions.permission.PermissionAccessType;
-import com.lbt.icon.base.security.domain.role.rolepermissions.permission.PermissionSource;
-import com.lbt.icon.base.security.domain.role.rolepermissions.permission.ResourceType;
+
+import com.lbt.icon.sec.security.domain.role.rolepermissions.permission.PermissionAccessType;
+import com.lbt.icon.sec.security.domain.role.rolepermissions.permission.PermissionSource;
+import com.lbt.icon.sec.security.domain.role.rolepermissions.permission.ResourceType;
 import lombok.*;
 
 import java.util.List;

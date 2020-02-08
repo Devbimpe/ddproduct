@@ -1,8 +1,9 @@
 package com.lbt.icon.demanddraft.config;
 
-import com.lbt.icon.base.security.domain.role.rolepermissions.permission.Permission;
-import com.lbt.icon.base.security.domain.role.rolepermissions.permission.PermissionProvider;
-import com.lbt.icon.base.security.domain.role.rolepermissions.permission.dto.CreatePermissionDto;
+
+import com.lbt.icon.sec.security.domain.role.rolepermissions.permission.Permission;
+import com.lbt.icon.sec.security.domain.role.rolepermissions.permission.PermissionProvider;
+import com.lbt.icon.sec.security.domain.role.rolepermissions.permission.dto.CreatePermissionDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
