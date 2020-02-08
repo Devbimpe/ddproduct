@@ -10,6 +10,7 @@ import com.lbt.icon.bankproduct.domain.branch.BankProductBranch;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranchRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
+import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
@@ -240,15 +241,38 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
     @Override
     @Transactional
+    @Checkable(
+            code="ENABLE_DEMAND_DRAFT",
+            description="Enable a demand draft product",
+            operation=Checkable.Operation.Others,
+            returnClass=BankProductMasterDTO.class,
+            dtoValidators = @DtoValidator(
+                    validatorClass = BankProductMasterValidator.class,
+                    validateMethod = "validateEnable",
+                    paramTypes = {String.class}
+            ),
+            naturalIdentifier="productCode")
     public BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.enableByProductCode(productCode);
     }
 
     @Override
     @Transactional
+    @Checkable(
+            code="DISABLE_DEMAND_DRAFT",
+            description="Disable a demand draft product",
+            operation=Checkable.Operation.Others,
+            returnClass=BankProductMasterDTO.class,
+            dtoValidators = @DtoValidator(
+                    validatorClass = BankProductMasterValidator.class,
+                    validateMethod = "validateDisable",
+                    paramTypes = {String.class}
+            ),
+            naturalIdentifier="productCode")
     public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.disableByProductCode(productCode);
     }
+
 
     @Override
     public List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode) {
