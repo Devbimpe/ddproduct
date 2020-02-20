@@ -39,7 +39,7 @@ public class DemandDraftProductController {
     public ResponseEntity<ApiResponseBase<QueryDemandDraftProductDTO>> create(@RequestBody CreateDemandDraftProductDTO dto) throws IconException {
         ApiResponseBase<QueryDemandDraftProductDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product created successfully");
-        dto.setNaturalId(UUID.randomUUID().toString());
+        dto.setNaturalId(dto.getDemandDraftProduct().getProductCode());
         dto.getBankProduct().setProductTypeCode(BankProductType.DDRAFT);
         apiResponseBase.setResponse(demandDraftProductService.create(dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.CREATED);

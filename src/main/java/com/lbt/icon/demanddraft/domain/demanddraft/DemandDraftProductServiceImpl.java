@@ -33,6 +33,7 @@ import com.lbt.icon.ledger.setup.glcodes.subcategory.GLSubCategoryService;
 import com.lbt.icon.ledger.setup.glcodes.subcategory.dto.GLSubCategoryDto;
 import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
+import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -250,6 +251,13 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     validateMethod = "validateEnable",
                     paramTypes = {String.class}
             ),
+            identifierFinderConfigs = {
+                    @IdentifierFinderConfig(
+                            finderClass = DemandDraftProductServiceImpl.class,
+                            finderMethod = "inquireByProductCode",
+                            identifierClass = String.class
+                    )
+            },
             naturalIdentifier="productCode")
     public BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.enableByProductCode(productCode);
@@ -267,6 +275,13 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     validateMethod = "validateDisable",
                     paramTypes = {String.class}
             ),
+            identifierFinderConfigs = {
+                    @IdentifierFinderConfig(
+                            finderClass = DemandDraftProductServiceImpl.class,
+                            finderMethod = "inquireByProductCode",
+                            identifierClass = String.class
+                    )
+            },
             naturalIdentifier="productCode")
     public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.disableByProductCode(productCode);
