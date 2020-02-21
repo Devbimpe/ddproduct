@@ -166,12 +166,20 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
     @Override
     @Checkable(
-            naturalIdentifier = "naturalId",
+            naturalIdentifier = "productCode",
             code = "UPDATE_DEMAND_DRAFT",
             operation = Checkable.Operation.Update,
             description = "update demand draft product record",
             dtoClass = UpdateDemandDraftProductDTO.class,
             returnClass = UpdateDemandDraftProductDTO.class,
+
+            identifierFinderConfigs = {
+                    @IdentifierFinderConfig(
+                            finderClass = DemandDraftProductServiceImpl.class,
+                            finderMethod = "inquireByProductCode",
+                            identifierClass = String.class
+                    )
+            },
 
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
                     paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
@@ -198,6 +206,26 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
+    @Checkable(
+            naturalIdentifier = "productCode",
+            code = "UPDATE_DEMAND_DRAFT",
+            operation = Checkable.Operation.Update,
+            description = "update demand draft product record",
+            dtoClass = UpdateDemandDraftProductDTO.class,
+            returnClass = UpdateDemandDraftProductDTO.class,
+
+            identifierFinderConfigs = {
+                    @IdentifierFinderConfig(
+                            finderClass = DemandDraftProductServiceImpl.class,
+                            finderMethod = "inquireByProductCode",
+                            identifierClass = String.class
+                    )
+            },
+
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
+                    paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
+                    validateMethod = "validate"
+            ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(UpdateDemandDraftProductWithDependenciesDTO dto, String productCode) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());

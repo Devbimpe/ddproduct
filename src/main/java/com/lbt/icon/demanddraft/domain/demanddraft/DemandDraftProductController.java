@@ -63,7 +63,7 @@ public class DemandDraftProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> findAllByProductType(@PageableDefault(size = 10, page = 0) Pageable pageable, @RequestParam("productType") BankProductType productType) throws IconQueryException{
+    public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> findAllByProductType(Pageable pageable, @RequestParam("productType") BankProductType productType) throws IconQueryException{
         ApiResponseBase<Page<BankProductMasterDTO>> apiResponseBase = new ApiResponseBase();
         Page<BankProductMasterDTO> page = demandDraftProductService.findAll(pageable,productType);
         apiResponseBase.setSuccessMessage("Demand draft products fetched successfully");
