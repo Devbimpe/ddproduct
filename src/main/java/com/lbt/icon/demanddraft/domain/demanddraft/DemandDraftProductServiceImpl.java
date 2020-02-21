@@ -136,6 +136,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
 
+        demandDraftProductInquiryDTO.setProductCode(productCode);
         demandDraftProductInquiryDTO.setBankProduct(bankProductMasterService.findByDemandDraftProductCode(productCode));
 
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
@@ -227,7 +228,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     validateMethod = "validate"
             ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
-    public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(UpdateDemandDraftProductWithDependenciesDTO dto, String productCode) throws IconException {
+    public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode,UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
         demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));

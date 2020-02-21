@@ -32,7 +32,7 @@ public interface DemandDraftProductService {
 
     UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
 
-    UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(UpdateDemandDraftProductWithDependenciesDTO dto, String productCode) throws IconException;
+    UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException;
 
     Page<BankProductMasterDTO> findAll(Pageable pageable, BankProductType productType) throws IconQueryException;
 
