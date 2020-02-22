@@ -17,6 +17,7 @@ import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.CreateDemandDraftProductDTO;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductDTO;
+import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductWithDependenciesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import lombok.RequiredArgsConstructor;
@@ -163,7 +164,7 @@ public class DemandDraftProductValidator {
 
 
 
-    public void validateUpdate(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
+    public void validateUpdate(String productCode, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
         List<FieldValidationError> fieldValidationErrors = CommonUtils.getStaticFieldValidationErrors(
                 dto.getDemandDraftProduct(), validator
         );

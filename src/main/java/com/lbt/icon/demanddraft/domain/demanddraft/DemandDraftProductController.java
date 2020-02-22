@@ -58,6 +58,7 @@ public class DemandDraftProductController {
     public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependencies(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("productCode") String productCode) throws IconException {
         ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
+        dto.setProductCode(productCode);
         apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(productCode,dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
