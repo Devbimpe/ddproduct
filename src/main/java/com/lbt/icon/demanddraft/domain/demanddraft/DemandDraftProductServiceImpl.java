@@ -212,8 +212,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             code = "UPDATE_DEMAND_DRAFT",
             operation = Checkable.Operation.Update,
             description = "update demand draft product record",
-            dtoClass = UpdateDemandDraftProductDTO.class,
-            returnClass = UpdateDemandDraftProductDTO.class,
+            dtoClass = UpdateDemandDraftProductWithDependenciesDTO.class,
+            returnClass = UpdateDemandDraftProductWithDependenciesDTO.class,
 
             identifierFinderConfigs = {
                     @IdentifierFinderConfig(
