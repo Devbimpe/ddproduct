@@ -6,6 +6,8 @@ import com.lbt.icon.core.domain.BaseDTO;
 import com.lbt.icon.demanddraft.type.ChargeCurrency;
 import lombok.*;
 
+import java.io.Serializable;
+
 
 /**
  * @author devbimpe
@@ -15,7 +17,10 @@ import lombok.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class QueryDemandDraftProductChargesDTO extends BaseDTO {
+public class QueryDemandDraftProductChargesDTO extends BaseDTO implements Serializable {
+
+    private static final long serialVersionUUID = 1L;
+
 
     private String productCode;
 

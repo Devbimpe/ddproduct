@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,7 +23,9 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-public class UpdateDemandDraftProductWithDependenciesDTO extends BaseDTO {
+public class UpdateDemandDraftProductWithDependenciesDTO extends BaseDTO implements Serializable {
+
+    private static final long serialVersionUUID = 1L;
 
     @JsonIgnore
     private String productCode;

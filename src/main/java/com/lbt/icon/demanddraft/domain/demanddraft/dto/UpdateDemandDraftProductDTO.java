@@ -2,6 +2,7 @@ package com.lbt.icon.demanddraft.domain.demanddraft.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
 import com.lbt.icon.core.domain.BaseDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.QueryDemandDraftProductChargesDTO;
@@ -10,6 +11,7 @@ import com.lbt.icon.demanddraft.type.DemandDraftType;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * @author devbimpe
@@ -21,30 +23,59 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UpdateDemandDraftProductDTO extends BaseDTO {
 
-    @JsonIgnore
     private String productCode;
 
-    private UpdateBankProductMasterDTO bankProduct;
+    private DemandDraftType demandDraftType;
+
+    private String inventoryType;
+
+    private String issueBank;
+
+    private String issueBranch;
+
+    private Boolean duplicateIssueReport;
+
+    private Boolean consolidatePartTrans;
+
+    private Boolean micrInventory;
+
+    private DDTransferFrequency ddTransferFrequency;
+
+    private String ddTransferSpacer;
+
+    private BankProductMasterDTO bankProductMasterDTO;
 
 
-    private QueryDemandDraftProductDTO demandDraftProduct;
+    @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
+    private String cautionStatePeriod;
 
-//    private DemandDraftType demandDraftType;
-//
-//    private String inventoryType;
-//
-//    private String issueBank;
-//
-//    private String issueBranch;
-//
-//    private boolean duplicateIssueReport;
-//
-//    private boolean consolidatePartTrans;
-//
-//    private boolean micrInventory;
-//
-//    private DDTransferFrequency ddTransferFrequency;
-//
-//    private String ddTransferSpacer;
+    @JsonIgnore
+    @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
+    private String revalidatePeriod;
+
+    @NotNull(message = "{demandDraft[NotNull.allowRevalidate]}")
+    private Boolean allowRevalidate;
+
+    @NotNull(message = "{demandDraft[NotNull.buyExchangeRateCode]}")
+    private String buyExchangeRateCode;
+
+    @NotNull(message = "{demandDraft[NotNull.sellExchangeRateCode]}")
+    private String sellExchangeRateCode;
+
+    private Boolean cashTransferAllowed;
+
+
+    private Boolean transferTransAllowed;
+
+
+    private Boolean custodianPrintAllow;
+
+
+    private String ddSequenceCode;
+
+
+    private String commonDDAccountId;
+
+
 
 }

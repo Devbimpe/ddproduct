@@ -30,7 +30,7 @@ public interface DemandDraftProductService {
     DemandDraftProductInquiryDTO findById(Long id) throws IconException;
 
 
-    UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
+    //UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException;
 
     UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException;
 

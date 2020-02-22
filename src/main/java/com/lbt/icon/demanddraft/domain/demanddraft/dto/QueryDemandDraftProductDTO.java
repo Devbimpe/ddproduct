@@ -1,5 +1,6 @@
 package com.lbt.icon.demanddraft.domain.demanddraft.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.core.domain.BaseDTO;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 
 /**
@@ -19,7 +21,10 @@ import javax.validation.constraints.Pattern;
 @Setter
 @Getter
 @NoArgsConstructor
-public class QueryDemandDraftProductDTO extends BaseDTO {
+public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable {
+
+    private static final long serialVersionUUID = 1L;
+
 
     private String productCode;
 
@@ -42,6 +47,7 @@ public class QueryDemandDraftProductDTO extends BaseDTO {
     private String ddTransferSpacer;
 
     private BankProductMasterDTO bankProductMasterDTO;
+
 
     @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
     private String cautionStatePeriod;

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.core.domain.BaseDTO;
 import lombok.*;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -13,7 +15,10 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @NoArgsConstructor
-public class QueryDemandDraftProductTranCodeLimitDTO extends BaseDTO {
+public class QueryDemandDraftProductTranCodeLimitDTO extends BaseDTO implements Serializable {
+
+    private static final long serialVersionUUID = 1L;
+
 
 
     private String productCode;

@@ -165,46 +165,46 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
 
 
-    @Override
-    @Checkable(
-            naturalIdentifier = "productCode",
-            code = "UPDATE_DEMAND_DRAFT",
-            operation = Checkable.Operation.Update,
-            description = "update demand draft product record",
-            dtoClass = UpdateDemandDraftProductDTO.class,
-            returnClass = UpdateDemandDraftProductDTO.class,
-
-            identifierFinderConfigs = {
-                    @IdentifierFinderConfig(
-                            finderClass = DemandDraftProductServiceImpl.class,
-                            finderMethod = "inquireByProductCode",
-                            identifierClass = String.class
-                    )
-            },
-
-            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
-                    paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
-                    validateMethod = "validateUpdate"
-            ))
-    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
-    public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
-        //demandDraftProductValidator.validateUpdate(productCode,dto);
-        DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
-                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
-        if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
-            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true ");
-            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
-
-        }
-        demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
-        demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
-        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
-        UpdateDemandDraftProductDTO update = new UpdateDemandDraftProductDTO();
-        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
-        update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
-
-        return update;
-    }
+//    @Override
+//    @Checkable(
+//            naturalIdentifier = "productCode",
+//            code = "UPDATE_DEMAND_DRAFT",
+//            operation = Checkable.Operation.Update,
+//            description = "update demand draft product record",
+//            dtoClass = UpdateDemandDraftProductDTO.class,
+//            returnClass = UpdateDemandDraftProductDTO.class,
+//
+//            identifierFinderConfigs = {
+//                    @IdentifierFinderConfig(
+//                            finderClass = DemandDraftProductServiceImpl.class,
+//                            finderMethod = "inquireByProductCode",
+//                            identifierClass = String.class
+//                    )
+//            },
+//
+//            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
+//                    paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
+//                    validateMethod = "validateUpdate"
+//            ))
+//    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
+//    public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
+//        //demandDraftProductValidator.validateUpdate(productCode,dto);
+//        DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
+//                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
+//        if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
+//            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true ");
+//            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
+//
+//        }
+//        demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
+//        demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
+//        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
+//        UpdateDemandDraftProductDTO update = new UpdateDemandDraftProductDTO();
+//        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
+//        update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
+//
+//        return update;
+//    }
 
     @Override
     @Checkable(
@@ -229,7 +229,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode,UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
-        demandDraftProductValidator.validateUpdate(productCode,dto);
+
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
         if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
@@ -237,6 +237,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
 
         }
+        demandDraftProductValidator.validateUpdate(productCode,dto);
 
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
 
