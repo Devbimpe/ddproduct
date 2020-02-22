@@ -184,11 +184,11 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
                     paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
-                    validateMethod = "validate"
+                    validateMethod = "validateUpdate"
             ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductDTO update(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
-        demandDraftProductValidator.validateFields(dto.getDemandDraftProduct());
+        demandDraftProductValidator.validateUpdate(productCode,dto);
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
         if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
@@ -225,7 +225,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
                     paramTypes = {String.class, UpdateDemandDraftProductDTO.class},
-                    validateMethod = "validate"
+                    validateMethod = "validateUpdate"
             ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode,UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {

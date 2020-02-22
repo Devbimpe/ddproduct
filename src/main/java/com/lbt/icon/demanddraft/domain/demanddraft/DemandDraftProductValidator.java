@@ -8,6 +8,7 @@ import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService
 import com.lbt.icon.bankcommons.domain.nextnumbergenerator.NextNumberGeneratorService;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
 import com.lbt.icon.bankproduct.domain.master.dto.AddBankProductMasterDTO;
+import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
 import com.lbt.icon.core.exception.FieldValidationError;
 import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.FieldValidationRuntimeException;
@@ -15,9 +16,11 @@ import com.lbt.icon.core.exception.IconException;
 
 import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.CreateDemandDraftProductDTO;
+import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -35,6 +38,7 @@ public class DemandDraftProductValidator {
     private final FinancialInstitutionService financialInstitutionService;
     private final BankProductMasterValidator bankProductMasterValidator;
     private final NextNumberGeneratorService nextNumberGeneratorService;
+    private final ModelMapper modelMapper;
 
     public void validateFields(Object obj) throws FieldValidationException {
         List<FieldValidationError> fieldValidationErrors =
@@ -156,5 +160,45 @@ public class DemandDraftProductValidator {
 //            throw new IconException(" Demand draft Type Is Mandatory For Demand Draft ");
 //        }
 //    }
+
+
+
+    public void validateUpdate(String productCode, UpdateDemandDraftProductDTO dto) throws IconException {
+        List<FieldValidationError> fieldValidationErrors = CommonUtils.getStaticFieldValidationErrors(
+                dto.getDemandDraftProduct(), validator
+        );
+        if (!fieldValidationErrors.isEmpty()) {
+            throw new FieldValidationException("Insert validation failed", fieldValidationErrors);
+        }
+
+
+        if (null == productCode)  {
+            FieldValidationError error = new FieldValidationError("productCode", "Invalid productCode");
+            fieldValidationErrors.add(error);
+            throw new FieldValidationException("Insert validation failed", fieldValidationErrors);
+        }
+
+        Boolean productCodeExists = repo.existsByProductCode(productCode);
+        if(!productCodeExists){
+            FieldValidationError error = new FieldValidationError();
+            error.setFieldName("productCode");
+            error.setMessage("Product code not found -> " + productCode);
+
+            fieldValidationErrors.add(error);
+            throw new FieldValidationException("Update validation failed", fieldValidationErrors);
+
+        }
+
+        try {
+            bankProductMasterValidator.validateProductUpdate(modelMapper.map(dto.getBankProduct(), UpdateBankProductMasterDTO.class));
+        } catch (FieldValidationException e) {
+            fieldValidationErrors.addAll(e.getFieldValidationErrors());
+            throw new FieldValidationException("Update validation failed", fieldValidationErrors);
+        }
+
+
+
+
+    }
 
 }
