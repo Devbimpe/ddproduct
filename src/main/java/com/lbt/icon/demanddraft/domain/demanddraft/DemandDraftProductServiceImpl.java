@@ -93,14 +93,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ))
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
-//        NextNumberGeneratorCodeDTO nextNumberGeneratorCodeDTO = NextNumberGeneratorCodeDTO.
-//                builder()
-//                .code(dto.getBankProduct().getAccountNoGenCode())
-//                .productCode(dto.getBankProduct().getProductCode())
-//                .build();
         BankProductMasterDTO bpm = null;
         demandDraftProductValidator.validate(dto);
-       // dto.getDemandDraftProduct().setDdSequenceCode(nextNumberGeneratorService.generateNextNumber(nextNumberGeneratorCodeDTO));
         QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
         bpm = bankProductMasterService.create(dto.getBankProduct());
         String productCode = bpm.getProductCode();
