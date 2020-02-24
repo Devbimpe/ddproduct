@@ -66,18 +66,15 @@ public class DemandDraftProductInstrServiceImpl implements DemandDraftProductIns
 
     @Override
     public List<QueryDemandDraftProductInstrDTO> updateInstrBatch(String productCode, List<QueryDemandDraftProductInstrDTO> demandDraftProductInstruments) throws IconException {
-        List<QueryDemandDraftProductInstrDTO> instrDTOS = new ArrayList<>();
-        for (QueryDemandDraftProductInstrDTO q: demandDraftProductInstruments) {
-            if (q.getId() == null) {
-                q.setProductCode(productCode);
-                instrDTOS.add(modelMapper.map(demanddraftproductinstrRepository.create(modelMapper.map(q,DemandDraftProductInstr.class)),QueryDemandDraftProductInstrDTO.class));
-            }
-            else {
-                QueryDemandDraftProductInstrDTO byId = findById(q.getId());
-                byId = PatchMapper.of(() -> q).map(byId).get();
-                instrDTOS.add(updateOne(byId));
-            }
+
+        List<DemandDraftProductInstr> dtos = demanddraftproductinstrRepository.findByProductCode(productCode);
+        List<QueryDemandDraftProductInstrDTO> returnDtos = new ArrayList<>();
+        demanddraftproductinstrRepository.deleteAll(dtos);
+        for (QueryDemandDraftProductInstrDTO q: demandDraftProductInstruments){
+            q.setProductCode(productCode);
+            DemandDraftProductInstr productInstr = demanddraftproductinstrRepository.create(modelMapper.map(q, DemandDraftProductInstr.class));
+            returnDtos.add(modelMapper.map(productInstr,QueryDemandDraftProductInstrDTO.class));
         }
-        return instrDTOS;
+        return returnDtos;
     }
 }

@@ -422,6 +422,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 //    }
 
     private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException {
+
         return demandDraftProductChargesService.updateChargeBatch(productCode, demandDraftProductCharges);
     }
 

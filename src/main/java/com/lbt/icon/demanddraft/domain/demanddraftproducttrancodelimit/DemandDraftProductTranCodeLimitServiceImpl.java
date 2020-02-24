@@ -70,19 +70,14 @@ public class DemandDraftProductTranCodeLimitServiceImpl implements DemandDraftPr
 
     @Override
     public List<QueryDemandDraftProductTranCodeLimitDTO> updateTranCodeBatch(String productCode, List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits) throws IconException {
-        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodes = new ArrayList<>();
-        for (QueryDemandDraftProductTranCodeLimitDTO q: demandDraftProductTranCodeLimits) {
-            if (q.getId() == null) {
-                q.setProductCode(productCode);
-                tranCodes.add(modelMapper.map(demandDraftProductTranCodeLimitRepository.create(modelMapper.map(q,DemandDraftProductTranCodeLimit.class)),QueryDemandDraftProductTranCodeLimitDTO.class));
-            }
-            else {
-                QueryDemandDraftProductTranCodeLimitDTO byId = findById(q.getId());
-                byId = PatchMapper.of(() -> q).map(byId).get();
-                tranCodes.add(updateOne(byId));
-            }
+        List<DemandDraftProductTranCodeLimit> dtos = demandDraftProductTranCodeLimitRepository.findByProductCode(productCode);
+        List<QueryDemandDraftProductTranCodeLimitDTO> returnDtos = new ArrayList<>();
+        demandDraftProductTranCodeLimitRepository.deleteAll(dtos);
+        for (QueryDemandDraftProductTranCodeLimitDTO q: demandDraftProductTranCodeLimits){
+            q.setProductCode(productCode);
+            DemandDraftProductTranCodeLimit productInstr = demandDraftProductTranCodeLimitRepository.create(modelMapper.map(q, DemandDraftProductTranCodeLimit.class));
+            returnDtos.add(modelMapper.map(productInstr,QueryDemandDraftProductTranCodeLimitDTO.class));
         }
-
-        return tranCodes;
+        return returnDtos;
     }
 }

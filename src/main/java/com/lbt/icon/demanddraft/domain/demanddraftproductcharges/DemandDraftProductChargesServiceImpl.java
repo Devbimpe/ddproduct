@@ -52,19 +52,15 @@ public class DemandDraftProductChargesServiceImpl implements DemandDraftProductC
 
     @Override
     public List<QueryDemandDraftProductChargesDTO> updateChargeBatch(String productCode, List<QueryDemandDraftProductChargesDTO> chargeDTOS) throws IconException {
-        List<QueryDemandDraftProductChargesDTO> dtos = new ArrayList<>();
+        List<DemandDraftProductCharges> dtos = demanddraftProductChargesRepository.findByProductCode(productCode);
+        List<QueryDemandDraftProductChargesDTO> returnDtos = new ArrayList<>();
+        demanddraftProductChargesRepository.deleteAll(dtos);
         for (QueryDemandDraftProductChargesDTO q: chargeDTOS){
-            if (q.getId() == null) {
                 q.setProductCode(productCode);
-                dtos.add(modelMapper.map(demanddraftProductChargesRepository.create(modelMapper.map(q, DemandDraftProductCharges.class)),QueryDemandDraftProductChargesDTO.class));
-            }
-            else {
-                QueryDemandDraftProductChargesDTO byId = findById(q.getId());
-                byId = PatchMapper.of(() -> q).map(byId).get();
-                dtos.add(updateOne(byId));
-            }
+            DemandDraftProductCharges productCharges = demanddraftProductChargesRepository.create(modelMapper.map(q, DemandDraftProductCharges.class));
+            returnDtos.add(modelMapper.map(productCharges,QueryDemandDraftProductChargesDTO.class));
         }
-        return dtos;
+        return returnDtos;
     }
 
     @Override
