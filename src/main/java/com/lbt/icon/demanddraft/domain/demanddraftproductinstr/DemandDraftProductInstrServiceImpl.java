@@ -72,7 +72,7 @@ public class DemandDraftProductInstrServiceImpl implements DemandDraftProductIns
         demanddraftproductinstrRepository.deleteAll(dtos);
         for (QueryDemandDraftProductInstrDTO q: demandDraftProductInstruments){
             q.setProductCode(productCode);
-            DemandDraftProductInstr productInstr = demanddraftproductinstrRepository.create(modelMapper.map(q, DemandDraftProductInstr.class));
+            DemandDraftProductInstr productInstr = demanddraftproductinstrRepository.save(modelMapper.map(q, DemandDraftProductInstr.class));
             returnDtos.add(modelMapper.map(productInstr,QueryDemandDraftProductInstrDTO.class));
         }
         return returnDtos;

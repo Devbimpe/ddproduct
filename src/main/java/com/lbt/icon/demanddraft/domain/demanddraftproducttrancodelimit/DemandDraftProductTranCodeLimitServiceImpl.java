@@ -75,7 +75,7 @@ public class DemandDraftProductTranCodeLimitServiceImpl implements DemandDraftPr
         demandDraftProductTranCodeLimitRepository.deleteAll(dtos);
         for (QueryDemandDraftProductTranCodeLimitDTO q: demandDraftProductTranCodeLimits){
             q.setProductCode(productCode);
-            DemandDraftProductTranCodeLimit productInstr = demandDraftProductTranCodeLimitRepository.create(modelMapper.map(q, DemandDraftProductTranCodeLimit.class));
+            DemandDraftProductTranCodeLimit productInstr = demandDraftProductTranCodeLimitRepository.save(modelMapper.map(q, DemandDraftProductTranCodeLimit.class));
             returnDtos.add(modelMapper.map(productInstr,QueryDemandDraftProductTranCodeLimitDTO.class));
         }
         return returnDtos;

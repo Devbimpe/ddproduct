@@ -57,7 +57,8 @@ public class DemandDraftProductChargesServiceImpl implements DemandDraftProductC
         demanddraftProductChargesRepository.deleteAll(dtos);
         for (QueryDemandDraftProductChargesDTO q: chargeDTOS){
                 q.setProductCode(productCode);
-            DemandDraftProductCharges productCharges = demanddraftProductChargesRepository.create(modelMapper.map(q, DemandDraftProductCharges.class));
+
+            DemandDraftProductCharges productCharges = demanddraftProductChargesRepository.save(modelMapper.map(q, DemandDraftProductCharges.class));
             returnDtos.add(modelMapper.map(productCharges,QueryDemandDraftProductChargesDTO.class));
         }
         return returnDtos;
