@@ -237,7 +237,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
         UpdateDemandDraftProductWithDependenciesDTO update = new UpdateDemandDraftProductWithDependenciesDTO();
         demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
-        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateBasicDetails(dto.getBankProduct());
+        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateOne(dto.getBankProduct());
         update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
         update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
         update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(), productCode));
