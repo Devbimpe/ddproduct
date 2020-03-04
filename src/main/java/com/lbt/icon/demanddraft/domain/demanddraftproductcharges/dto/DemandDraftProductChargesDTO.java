@@ -26,9 +26,9 @@ public class DemandDraftProductChargesDTO implements Serializable {
 
     private String chargeCode;
 
-    private ChargeCurrency chargeCurrency;
-
-    private String exchangeRateCode;
+//    private ChargeCurrency chargeCurrency;
+//
+//    private String exchangeRateCode;
 
 
 }

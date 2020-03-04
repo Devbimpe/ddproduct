@@ -28,8 +28,8 @@ public class QueryDemandDraftProductChargesDTO extends BaseDTO implements Serial
 
     private String chargeCode;
 
-    private ChargeCurrency chargeCurrency;
-
-    private String exchangeRateCode;
+//    private ChargeCurrency chargeCurrency;
+//
+//    private String exchangeRateCode;
 
 }

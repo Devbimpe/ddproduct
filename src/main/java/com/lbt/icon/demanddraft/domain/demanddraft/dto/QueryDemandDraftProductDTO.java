@@ -58,8 +58,8 @@ public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable 
     @NotNull(message = "{demandDraft[NotNull.allowRevalidate]}")
     private Boolean allowRevalidate;
 
-    @NotNull(message = "{demandDraft[NotNull.buyExchangeRateCode]}")
-    private String buyExchangeRateCode;
+//    @NotNull(message = "{demandDraft[NotNull.buyExchangeRateCode]}")
+//    private String buyExchangeRateCode;
 
     @NotNull(message = "{demandDraft[NotNull.sellExchangeRateCode]}")
     private String sellExchangeRateCode;
@@ -77,6 +77,8 @@ public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable 
 
 
     private String commonDDAccountId;
+
+    private String defaultCustodian;
 
 
 

@@ -56,8 +56,8 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
     @NotNull(message = "{demandDraft[NotNull.allowRevalidate]}")
     private Boolean allowRevalidate;
 
-    @NotNull(message = "{demandDraft[NotNull.buyExchangeRateCode]}")
-    private String buyExchangeRateCode;
+//    @NotNull(message = "{demandDraft[NotNull.buyExchangeRateCode]}")
+//    private String buyExchangeRateCode;
 
     @NotNull(message = "{demandDraft[NotNull.sellExchangeRateCode]}")
     private String sellExchangeRateCode;
@@ -75,6 +75,8 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
 
 
     private String commonDDAccountId;
+
+    private String defaultCustodian;
 
 
 

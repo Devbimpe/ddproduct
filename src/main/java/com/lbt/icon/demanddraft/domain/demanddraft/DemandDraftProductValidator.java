@@ -80,6 +80,9 @@ public class DemandDraftProductValidator {
             FieldValidationError error = new FieldValidationError("accountNoGenCode", "Account No Gen Code Code is not available " );
             fieldValidationErrors.add(error);
         }
+
+
+
 //        validateInventoryCategory(dto.getDemandDraftProduct().getInventoryType(), fieldValidationErrors);
 //        validateIssueBankAndBranch(dto, fieldValidationErrors);
 //        validateDemandDraftType(dto);
@@ -90,15 +93,15 @@ public class DemandDraftProductValidator {
     }
 
     private void validateCurrencyRate(CreateDemandDraftProductDTO dto, List<FieldValidationError> fieldValidationErrors) {
-        for (DemandDraftProductChargesDTO charge:dto.getDemandDraftProductCharges()) {
-            if(!StringUtils.isEmpty(charge.getExchangeRateCode())) {
-                Boolean currencyRateExists = currencyRateService.existsByRateCode(charge.getExchangeRateCode());
+      //  for (DemandDraftProductChargesDTO charge:dto.getDemandDraftProductCharges()) {
+            if(!StringUtils.isEmpty(dto.getDemandDraftProduct().getSellExchangeRateCode())) {
+                Boolean currencyRateExists = currencyRateService.existsByRateCode(dto.getDemandDraftProduct().getSellExchangeRateCode());
                 if (!currencyRateExists) {
-                    FieldValidationError error = new FieldValidationError("exchangeRateCode", "Exchange Rate code not found-> " + charge.getExchangeRateCode());
+                    FieldValidationError error = new FieldValidationError("exchangeRateCode", "Exchange Rate code not found-> " + dto.getDemandDraftProduct().getSellExchangeRateCode());
                     fieldValidationErrors.add(error);
                 }
             }
-        }
+     //   }
     }
 //
 //    private void validateIssueBankAndBranch(CreateDemandDraftProductDTO dto, List<FieldValidationError> fieldValidationErrors) {

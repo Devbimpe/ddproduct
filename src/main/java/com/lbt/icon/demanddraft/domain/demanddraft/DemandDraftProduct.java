@@ -69,9 +69,9 @@ public class DemandDraftProduct extends BaseEntity {
     @Column(name = "allow_revalidate", nullable = false)
     private boolean allowRevalidate;
 
-
-    @Column(name = "buy_exchange_rate_code")
-    private String buyExchangeRateCode;
+//
+//    @Column(name = "buy_exchange_rate_code")
+//    private String buyExchangeRateCode;
 
 
     @Column(name = "sell_exchange_rate_code")
@@ -97,6 +97,8 @@ public class DemandDraftProduct extends BaseEntity {
     private String commonDDAccountId;
 
 
+    @Column(name = "defaultCustodian")
+    private String defaultCustodian;
 
 
 
