@@ -74,8 +74,8 @@ public class DemandDraftProduct extends BaseEntity {
 //    private String buyExchangeRateCode;
 
 
-    @Column(name = "sell_exchange_rate_code")
-    private String sellExchangeRateCode;
+    @Column(name = "exchange_rate_code", nullable = false)
+    private String exchangeRateCode;
 
     @Column(name = "cash_transfer_allowed")
     private boolean cashTransferAllowed;

@@ -57,8 +57,8 @@ public class DemandDraftProductDTO implements Serializable {
 //    @NotNull(message = "{demandDraft[NotNull.buyExchangeRateCode]}")
 //    private String buyExchangeRateCode;
 
-    @NotNull(message = "{demandDraft[NotNull.sellExchangeRateCode]}")
-    private String sellExchangeRateCode;
+    @NotNull(message = "{demandDraft[NotNull.exchangeRateCode]}")
+    private String exchangeRateCode;
 
     private Boolean cashTransferAllowed;
 
