@@ -94,10 +94,10 @@ public class DemandDraftProductValidator {
 
     private void validateCurrencyRate(CreateDemandDraftProductDTO dto, List<FieldValidationError> fieldValidationErrors) {
       //  for (DemandDraftProductChargesDTO charge:dto.getDemandDraftProductCharges()) {
-            if(!StringUtils.isEmpty(dto.getDemandDraftProduct().getSellExchangeRateCode())) {
-                Boolean currencyRateExists = currencyRateService.existsByRateCode(dto.getDemandDraftProduct().getSellExchangeRateCode());
+            if(!StringUtils.isEmpty(dto.getDemandDraftProduct().getExchangeRateCode())) {
+                Boolean currencyRateExists = currencyRateService.existsByRateCode(dto.getDemandDraftProduct().getExchangeRateCode());
                 if (!currencyRateExists) {
-                    FieldValidationError error = new FieldValidationError("exchangeRateCode", "Exchange Rate code not found-> " + dto.getDemandDraftProduct().getSellExchangeRateCode());
+                    FieldValidationError error = new FieldValidationError("exchangeRateCode", "Exchange Rate code not found-> " + dto.getDemandDraftProduct().getExchangeRateCode());
                     fieldValidationErrors.add(error);
                 }
             }
