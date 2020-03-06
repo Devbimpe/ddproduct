@@ -97,7 +97,7 @@ public class DemandDraftProduct extends BaseEntity {
     private String commonDDAccountId;
 
 
-    @Column(name = "defaultCustodian")
+    @Column(name = "default_custodian")
     private String defaultCustodian;
 
 
