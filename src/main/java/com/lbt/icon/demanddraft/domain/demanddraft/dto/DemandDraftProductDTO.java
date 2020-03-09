@@ -49,7 +49,7 @@ public class DemandDraftProductDTO implements Serializable {
 
 
 //    @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
-    private String revalidatePeriod;
+   // private String revalidatePeriod;
 
     @NotNull(message = "{demandDraft[NotNull.allowRevalidate]}")
     private Boolean allowRevalidate;
@@ -68,8 +68,8 @@ public class DemandDraftProductDTO implements Serializable {
 
     private Boolean custodianPrintAllow;
 
-    @NotNull(message = "{demandDraft[NotNull.ddSequenceCode]}")
-    private String ddSequenceCode;
+//    @NotNull(message = "{demandDraft[NotNull.ddSequenceCode]}")
+//    private String ddSequenceCode;
 
 
     private String commonDDAccountId;

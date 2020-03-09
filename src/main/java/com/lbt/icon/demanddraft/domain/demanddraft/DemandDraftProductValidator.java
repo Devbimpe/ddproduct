@@ -59,23 +59,23 @@ public class DemandDraftProductValidator {
         List<FieldValidationError> fieldValidationErrors = CommonUtils.getStaticFieldValidationErrors(
                 dto, validator
         );
-        try {
-            validateBankProductMaster(dto.getBankProduct(),fieldValidationErrors);
-            if(dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())){
-                FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true " );
-                fieldValidationErrors.add(error);
-            }
-        } catch (FieldValidationException e) {
-
-            e.printStackTrace();
-            throw e;
-        }
+//        try {
+//            validateBankProductMaster(dto.getBankProduct(),fieldValidationErrors);
+//            if(dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())){
+//                FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true " );
+//                fieldValidationErrors.add(error);
+//            }
+//        } catch (FieldValidationException e) {
+//
+//            e.printStackTrace();
+//            throw e;
+//        }
         validateFields(dto.getDemandDraftProduct());
         validateProductCode(dto.getBankProduct().getProductCode(), fieldValidationErrors);
-        if(!nextNumberGeneratorService.existsByCode(dto.getDemandDraftProduct().getDdSequenceCode())){
-            FieldValidationError error = new FieldValidationError("ddSequenceCode", "DD Sequence Code is not available " );
-            fieldValidationErrors.add(error);
-        }
+//        if(!nextNumberGeneratorService.existsByCode(dto.getDemandDraftProduct().getDdSequenceCode())){
+//            FieldValidationError error = new FieldValidationError("ddSequenceCode", "DD Sequence Code is not available " );
+//            fieldValidationErrors.add(error);
+//        }
         if(!nextNumberGeneratorService.existsByCode(dto.getBankProduct().getAccountNoGenCode())){
             FieldValidationError error = new FieldValidationError("accountNoGenCode", "Account No Gen Code Code is not available " );
             fieldValidationErrors.add(error);

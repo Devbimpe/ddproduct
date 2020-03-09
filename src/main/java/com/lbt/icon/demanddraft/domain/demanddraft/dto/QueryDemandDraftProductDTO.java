@@ -53,7 +53,7 @@ public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable 
     private String cautionStatePeriod;
 
 //    @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
-    private String revalidatePeriod;
+   // private String revalidatePeriod;
 
     @NotNull(message = "{demandDraft[NotNull.allowRevalidate]}")
     private Boolean allowRevalidate;
@@ -73,7 +73,7 @@ public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable 
     private Boolean custodianPrintAllow;
 
 
-    private String ddSequenceCode;
+//    private String ddSequenceCode;
 
 
     private String commonDDAccountId;

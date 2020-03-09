@@ -226,11 +226,11 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(productCode).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", productCode)));
-        if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
-            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true ");
-            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
-
-        }
+//        if (dto.getDemandDraftProduct().getAllowRevalidate() != null && dto.getDemandDraftProduct().getAllowRevalidate() && StringUtils.isEmpty(dto.getDemandDraftProduct().getRevalidatePeriod())) {
+//            FieldValidationError error = new FieldValidationError("revalidatePeriod", "Revalidate period cannot be null when allowRevalidate  is true ");
+//            throw new FieldValidationException("revalidatePeriod", Collections.singletonList(error));
+//
+//        }
         demandDraftProductValidator.validateUpdate(productCode,dto);
 
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();

@@ -49,9 +49,9 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
     @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
     private String cautionStatePeriod;
 
-    @JsonIgnore
-    @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
-    private String revalidatePeriod;
+//    @JsonIgnore
+//    @Pattern(regexp = "^P[0-9]+[Y][0-9]+[M][0-9]+[D]$", message = "{dd.revalidatePeriod.Pattern}")
+//    private String revalidatePeriod;
 
     @NotNull(message = "{demandDraft[NotNull.allowRevalidate]}")
     private Boolean allowRevalidate;
@@ -71,7 +71,7 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
     private Boolean custodianPrintAllow;
 
 
-    private String ddSequenceCode;
+//    private String ddSequenceCode;
 
 
     private String commonDDAccountId;
