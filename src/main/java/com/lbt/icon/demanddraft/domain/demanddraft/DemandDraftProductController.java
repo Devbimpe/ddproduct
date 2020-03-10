@@ -2,6 +2,8 @@ package com.lbt.icon.demanddraft.domain.demanddraft;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
+import com.lbt.icon.bankproduct.domain.master.search.BankProductContextSearch;
+import com.lbt.icon.bankproduct.domain.master.search.BankProductMasterSearchParams;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.domain.ApiResponseBase;
 import com.lbt.icon.core.exception.EntityNotFoundException;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +33,9 @@ import java.util.UUID;
 @RestController
 public class DemandDraftProductController {
     private final DemandDraftProductService demandDraftProductService;
+
+    private BankProductContextSearch accountProductService;
+
 
     public DemandDraftProductController(DemandDraftProductService demandDraftProductService) {
         this.demandDraftProductService = demandDraftProductService;
@@ -64,7 +70,7 @@ public class DemandDraftProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> findAllByProductType(Pageable pageable, @RequestParam("productType") BankProductType productType) throws IconQueryException{
+    public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> findAllByProductType(Pageable pageable, @RequestParam("productTypeCode") BankProductType productType) throws IconQueryException{
         ApiResponseBase<Page<BankProductMasterDTO>> apiResponseBase = new ApiResponseBase();
         Page<BankProductMasterDTO> page = demandDraftProductService.findAll(pageable,productType);
         apiResponseBase.setSuccessMessage("Demand draft products fetched successfully");
@@ -163,6 +169,24 @@ public class DemandDraftProductController {
     			null), 
     		HttpStatus.OK);
     }
+
+
+
+    @GetMapping("/query")
+    @ResponseBody
+    public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> search(
+            @NotNull BankProductMasterSearchParams params, Pageable pageable) throws IconQueryException,FieldValidationException
+    {
+        ApiResponseBase<Page<BankProductMasterDTO>> rsp = new ApiResponseBase<>();
+        HttpStatus status = HttpStatus.OK;
+
+        Page<BankProductMasterDTO> accountMasterView = null;
+        accountMasterView = accountProductService.search(params, pageable);
+        rsp.setResponse(accountMasterView);
+
+        return new ResponseEntity<>(rsp, status);
+    }
+
 
 //	@GetMapping("/{productCode}/findglcodes")
 //    public ResponseEntity<?> findGlsByProductCode(@PathVariable String productCode) throws EntityNotFoundException, IconQueryException, IconException {

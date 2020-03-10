@@ -57,5 +57,7 @@ public interface DemandDraftProductService {
 
 
 	//List<DemandDraftProductGlDto> findGlsByProductCode(String productCode);
+
+    //public Page<BankProductMasterDTO> search(String reportDescription, String fromDate, String toDate, Pageable pageable) throws IconException
 }
 
