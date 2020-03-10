@@ -12,6 +12,7 @@ import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,14 +32,15 @@ import java.util.UUID;
 @Api(value = "demanddrafts Controller", protocols = "https", description = "For demanddrafts Operations.")
 @RequestMapping("v1/demanddrafts")
 @RestController
+
 public class DemandDraftProductController {
     private final DemandDraftProductService demandDraftProductService;
+    private final BankProductContextSearch accountProductService;
 
-    private BankProductContextSearch accountProductService;
 
-
-    public DemandDraftProductController(DemandDraftProductService demandDraftProductService) {
+    public DemandDraftProductController(DemandDraftProductService demandDraftProductService, BankProductContextSearch accountProductService) {
         this.demandDraftProductService = demandDraftProductService;
+        this.accountProductService = accountProductService;
     }
 
     @PostMapping
