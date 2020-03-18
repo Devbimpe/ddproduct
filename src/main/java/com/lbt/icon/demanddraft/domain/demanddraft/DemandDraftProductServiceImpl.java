@@ -28,6 +28,9 @@ import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDr
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitService;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
+import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
+import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionQueryDto;
+import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionUpdatedDto;
 import com.lbt.icon.functional.mapper.PatchMapper;
 import com.lbt.icon.ledger.setup.glcodes.subcategory.GLSubCategoryService;
 import com.lbt.icon.ledger.setup.glcodes.subcategory.dto.GLSubCategoryDto;
@@ -74,7 +77,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final GLSubCategoryService gLSubCategoryService;
     private final GlobalCodeService globalCodeService;
     private final ModelMapper modelMapper;
-    private final NextNumberGeneratorService nextNumberGeneratorService;
+    private final ExceptionDefinitionService exceptionDefinitionService;
+
 
 
     @Override
@@ -110,6 +114,18 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             tranCodeLim.setProductCode(productCode);
             demandDraftProductTranCodeLimitService.create(tranCodeLim);
         }
+
+
+        if (dto.getBankProduct().getExceptionIdentifierCodes() != null) {
+            try {
+                exceptionDefinitionService.updateExceptionDefinitions(productCode,dto.getBankProduct().getProductTypeCode().getCode(), ExceptionDefinitionUpdatedDto.builder().identifierCodes(dto.getBankProduct().getExceptionIdentifierCodes()).build());
+            } catch (IconException e) {
+                e.printStackTrace();
+                throw new IconException(e.getMessage());
+            }
+
+        }
+
         DemandDraftProduct demandDraftProduct = modelMapper.map(dto.getDemandDraftProduct(), DemandDraftProduct.class);
         queryDemandDraftProductDTO = new QueryDemandDraftProductDTO();
         queryDemandDraftProductDTO.setBankProductMasterDTO(bpm);
@@ -128,6 +144,11 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
+
+        List<ExceptionDefinitionQueryDto> exceptionDTOS = exceptionDefinitionService.findByProductCodeAndProductTypeCode(productCode,BankProductType.DDRAFT.getCode());
+        if (exceptionDTOS != null && !exceptionDTOS.isEmpty()) {
+            demandDraftProductInquiryDTO.setExceptionDto(exceptionDTOS);
+        }
 
         demandDraftProductInquiryDTO.setProductCode(productCode);
         demandDraftProductInquiryDTO.setBankProduct(bankProductMasterService.findByDemandDraftProductCode(productCode));
@@ -237,6 +258,15 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         UpdateDemandDraftProductWithDependenciesDTO update = new UpdateDemandDraftProductWithDependenciesDTO();
         demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
         BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateOne(dto.getBankProduct());
+        if (dto.getBankProduct().getExceptionIdentifierCodes() != null) {
+            try {
+                exceptionDefinitionService.updateExceptionDefinitions(productCode,dto.getBankProduct().getProductTypeCode().getCode(), ExceptionDefinitionUpdatedDto.builder().identifierCodes(dto.getBankProduct().getExceptionIdentifierCodes()).build());
+            } catch (IconException e) {
+                e.printStackTrace();
+                throw new IconException(e.getMessage());
+            }
+
+        }
         update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
         update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
         update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(), productCode));
