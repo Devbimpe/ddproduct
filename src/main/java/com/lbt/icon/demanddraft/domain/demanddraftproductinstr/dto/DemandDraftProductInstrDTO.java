@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 public class DemandDraftProductInstrDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @JsonIgnore
     private String productCode;
