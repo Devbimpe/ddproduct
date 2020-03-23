@@ -55,7 +55,8 @@ public class DemandDraftProductValidator {
         throw new FieldValidationException("Field validation error occur", fieldValidationErrors);
     }
 
-    public void validate(CreateDemandDraftProductDTO dto) throws IconException{
+    public void validate(CreateDemandDraftProductDTO dto) throws FieldValidationException{
+
         List<FieldValidationError> fieldValidationErrors = CommonUtils.getStaticFieldValidationErrors(
                 dto, validator
         );

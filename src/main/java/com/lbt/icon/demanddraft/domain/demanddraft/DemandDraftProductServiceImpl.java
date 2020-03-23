@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class, noRollbackFor = IconException.class)
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
     private final BankBranchRepo bankBranchRepo;
