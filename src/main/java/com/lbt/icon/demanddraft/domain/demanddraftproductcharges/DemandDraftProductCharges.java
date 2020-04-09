@@ -18,11 +18,13 @@ import javax.validation.constraints.NotNull;
 @Where(clause = "deleted=false")
 @Setter
 @Getter
-@NoArgsConstructor
 @ToString
 @EqualsAndHashCode
 @Audited
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(schema = "bankcore", name = "demand_draft_prod_charges")
 public class DemandDraftProductCharges extends BaseEntity {
 

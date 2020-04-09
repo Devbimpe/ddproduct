@@ -1,0 +1,14 @@
+{
+  "productCode": "DD001",
+  "allowRevalidate":false,
+  "transferTransAllowed":true,
+  "ddSequenceCode":"",
+  "revalidatePeriod":"",
+  "defaultCustodian":"",
+  "demandDraftType":"SELF_BRANCH",
+  "inventoryType":"DD",
+  "ddTransferFrequency":"MONTHLY",
+  "exchangeRateCode":"NOR",
+  "duplicateIssueReport":true,
+  "consolidatePartTrans":true
+}

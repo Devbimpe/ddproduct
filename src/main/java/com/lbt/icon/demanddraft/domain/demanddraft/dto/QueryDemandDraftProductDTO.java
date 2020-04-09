@@ -20,7 +20,9 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable {
 
     private static final long serialVersionUUID = 1L;

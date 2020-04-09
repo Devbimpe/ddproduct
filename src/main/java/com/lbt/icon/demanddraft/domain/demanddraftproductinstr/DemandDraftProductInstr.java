@@ -20,6 +20,9 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode
 @Audited
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(schema = "bankcore", name = "demand_draft_prod_instr")
 public class DemandDraftProductInstr extends BaseEntity {
 

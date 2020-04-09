@@ -1,0 +1,36 @@
+{
+  "productCcyLimitDTOS":[
+    {
+      "creditCashLimit":0,
+      "creditTransferLimit":0,
+      "creditClearingLimit":0,
+      "debitBalanceLimit":0,
+      "debitCashLimit":0,
+      "debitClearingLimit":0,
+      "debitTransferLimit":0,
+      "currencyCode":"NGN"
+
+    }
+  ],
+  "effectiveDate":"2020-03-16T23:00:00.000Z",
+  "gLSubCodes":[
+    "45870"
+  ],
+  "productCode":"TEST_EXCEP",
+  "productName":"TESTING EXCEPTION",
+  "expiryDate":"2020-06-25T20:02:25.208Z",
+  "officeProduct":{
+    "spacerCodes":[
+      "5050011001"
+    ],
+    "restrictionType":"CREDIT"
+  },
+  "bankProductBranch":{
+    "branchCodes":[
+      "093"
+    ]
+  },
+  "exceptionIdentifierCodes":{
+    "BANKERS_CHECK":"UD3"
+  }
+}

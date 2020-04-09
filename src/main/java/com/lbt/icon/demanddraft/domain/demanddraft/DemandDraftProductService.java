@@ -56,7 +56,7 @@ public interface DemandDraftProductService {
 	List<DemandDraftProductSpacerCodeDto> findSpacersByProductCode(String productCode);
 
 
-	//List<DemandDraftProductGlDto> findGlsByProductCode(String productCode);
+	List<DemandDraftProductGlDto> findGlsByProductCode(String productCode);
 
     //public Page<BankProductMasterDTO> search(String reportDescription, String fromDate, String toDate, Pageable pageable) throws IconException
 }

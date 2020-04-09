@@ -313,6 +313,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     )
             },
             naturalIdentifier="productCode")
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT + "')")
     public BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.enableByProductCode(productCode);
     }
@@ -337,6 +338,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     )
             },
             naturalIdentifier="productCode")
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
     public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.disableByProductCode(productCode);
     }
@@ -422,34 +424,32 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             return new ArrayList<>();
     }
 
-//    @Override
-//    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
-//
-//        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
-//
-//        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
-//        for (BankProductGL bankProductGl : bankProductGls) {
-//            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
-//            Optional<GLSubCategoryDto> optional = null;
-//            try {
-//                optional = gLSubCategoryService.findFirstByCode(glSubCode);
-//
-//                if (optional.isPresent()) {
-//                    demandDraftProductGlDtos.add(
-//                            DemandDraftProductGlDto.builder()
-//                                    .glSubCode(glSubCode)
-//                                    .description(optional.get().getDescription())
-//                                    .build()
-//                    );
-//                }
-//            } catch (EntityNotFoundException iqe) {
-//            } catch (IconQueryException iqe) {
-//            }
-//        }
-//
-//
-//        return demandDraftProductGlDtos;
-//    }
+    @Override
+    public List<DemandDraftProductGlDto> findGlsByProductCode(String productCode) {//gLSubCategoryService
+
+        List<DemandDraftProductGlDto> demandDraftProductGlDtos = new ArrayList<DemandDraftProductGlDto>();
+
+        List<BankProductGL> bankProductGls = bankProductGLRepo.findByProductCodeIgnoreCase(productCode);
+        for (BankProductGL bankProductGl : bankProductGls) {
+            String glSubCode = bankProductGl.getGlsubCode() != null ? bankProductGl.getGlsubCode().trim() : "";
+            GLSubCategoryDto optional = null;
+            try {
+                optional = gLSubCategoryService.findByCode(glSubCode);
+
+                    demandDraftProductGlDtos.add(
+                            DemandDraftProductGlDto.builder()
+                                    .glSubCode(glSubCode)
+                                    .description(optional.getDescription())
+                                    .build()
+                    );
+
+            } catch (IconQueryException iqe) {
+            }
+        }
+
+
+        return demandDraftProductGlDtos;
+    }
 
     private List<QueryDemandDraftProductChargesDTO> updateCharges(List<QueryDemandDraftProductChargesDTO> demandDraftProductCharges, String productCode) throws IconException {
 

@@ -24,6 +24,8 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Audited
 @Entity
+@AllArgsConstructor
+@Builder
 @Table(schema = "bankcore", name = "demand_draft_prod_tr_code_limit")
 public class DemandDraftProductTranCodeLimit extends BaseEntity {
 
