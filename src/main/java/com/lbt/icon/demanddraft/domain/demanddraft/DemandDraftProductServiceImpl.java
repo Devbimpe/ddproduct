@@ -96,7 +96,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     paramTypes = CreateDemandDraftProductDTO.class,
                     validateMethod = "validate"
             ))
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND_DRAFT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
         BankProductMasterDTO bpm = null;
@@ -244,7 +244,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     paramTypes = {String.class, UpdateDemandDraftProductWithDependenciesDTO.class},
                     validateMethod = "validateUpdate"
             ))
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND_DRAFT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode,UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
 
@@ -317,7 +317,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     )
             },
             naturalIdentifier="productCode")
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND_DRAFT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT + "')")
     public BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.enableByProductCode(productCode);
@@ -344,7 +344,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             },
             naturalIdentifier="productCode")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, module = "DEMAND_DRAFT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.disableByProductCode(productCode);
     }

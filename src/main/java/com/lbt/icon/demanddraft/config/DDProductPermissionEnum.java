@@ -14,7 +14,8 @@ public enum DDProductPermissionEnum implements PermissionSource {
 	CREATE_DD_PRODUCT("Create", "Create demand draft product", Authority.CREATE_DD_PRODUCT, PermissionAccessType.WRITE, PermissionConstants.DD_PRODUCT_RULE_NAME, ResourceType.CORE),
 	UPDATE_DD_PRODUCT("Update", "Update demand draft product", Authority.UPDATE_DD_PRODUCT, PermissionAccessType.WRITE, PermissionConstants.DD_PRODUCT_RULE_NAME, ResourceType.CORE),
 	ENABLE_DD_PRODUCT("Enable", "Enable demand draft product", Authority.ENABLE_DD_PRODUCT, PermissionAccessType.WRITE, PermissionConstants.DD_PRODUCT_RULE_NAME, ResourceType.CORE),
-	DISABLE_DD_PRODUCT("Disable", "Disable demand draft product", Authority.DISABLE_DD_PRODUCT, PermissionAccessType.WRITE, PermissionConstants.DD_PRODUCT_RULE_NAME, ResourceType.CORE);
+	DISABLE_DD_PRODUCT("Disable", "Disable demand draft product", Authority.DISABLE_DD_PRODUCT, PermissionAccessType.WRITE, PermissionConstants.DD_PRODUCT_RULE_NAME, ResourceType.CORE),
+	AUTHORIZE_DD_PRODUCT("Authorize", "Authorize demand draft product", Authority.AUTHORIZE_DD_PRODUCT, PermissionAccessType.WRITE, PermissionConstants.DD_PRODUCT_RULE_NAME, ResourceType.CORE);
 
 	private final String name;
 	private final String description;
@@ -44,6 +45,7 @@ public enum DDProductPermissionEnum implements PermissionSource {
 		public static final String UPDATE_DD_PRODUCT = "UPDATE_DD_PRODUCT";
 		public static final String ENABLE_DD_PRODUCT = "ENABLE_DD_PRODUCT";
 		public static final String DISABLE_DD_PRODUCT = "DISABLE_DD_PRODUCT";
+		public static final String AUTHORIZE_DD_PRODUCT = "AUTHORIZE_DD_PRODUCT";
 	}
 	
 	@NoArgsConstructor(access=AccessLevel.PRIVATE)
