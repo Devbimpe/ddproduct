@@ -1,5 +1,6 @@
 package com.lbt.icon.demanddraft.domain.demanddraft;
 
+import com.lbt.icon.audit.stereotype.FuncAudit;
 import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranch;
 import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranchRepo;
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
@@ -45,6 +46,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -94,6 +96,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     paramTypes = CreateDemandDraftProductDTO.class,
                     validateMethod = "validate"
             ))
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND_DRAFT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
         BankProductMasterDTO bpm = null;
@@ -241,6 +244,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     paramTypes = {String.class, UpdateDemandDraftProductWithDependenciesDTO.class},
                     validateMethod = "validateUpdate"
             ))
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND_DRAFT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode,UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
 
@@ -313,6 +317,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     )
             },
             naturalIdentifier="productCode")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND_DRAFT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT + "')")
     public BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.enableByProductCode(productCode);
@@ -339,6 +344,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             },
             naturalIdentifier="productCode")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, module = "DEMAND_DRAFT")
     public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
         return bankProductMasterService.disableByProductCode(productCode);
     }

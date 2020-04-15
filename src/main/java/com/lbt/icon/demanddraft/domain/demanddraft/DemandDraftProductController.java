@@ -6,10 +6,12 @@ import com.lbt.icon.bankproduct.domain.master.search.BankProductContextSearch;
 import com.lbt.icon.bankproduct.domain.master.search.BankProductMasterSearchParams;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.domain.ApiResponseBase;
+import com.lbt.icon.core.domain.PageQueryCriteria;
 import com.lbt.icon.core.exception.EntityNotFoundException;
 import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
+import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -177,13 +179,13 @@ public class DemandDraftProductController {
     @GetMapping("/query")
     @ResponseBody
     public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> search(
-            @NotNull BankProductMasterSearchParams params, Pageable pageable) throws IconQueryException,FieldValidationException
+            @NotNull BankProductMasterSearchParams params,  PageQueryCriteria pageable) throws IconQueryException,FieldValidationException
     {
         ApiResponseBase<Page<BankProductMasterDTO>> rsp = new ApiResponseBase<>();
         HttpStatus status = HttpStatus.OK;
 
         Page<BankProductMasterDTO> accountMasterView = null;
-        accountMasterView = accountProductService.search(params, pageable);
+        accountMasterView = accountProductService.search(params, CommonUtils.getPageable(pageable));
         rsp.setResponse(accountMasterView);
 
         return new ResponseEntity<>(rsp, status);
