@@ -29,7 +29,8 @@ import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDra
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitValidator;
 import com.lbt.icon.demanddraft.type.InstrumentTransactionType;
 import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
-import com.lbt.icon.ledger.setup.glcodes.subcategory.GLSubCategoryService;
+
+import com.lbt.icon.ledger.setup.glcodes.subcategory.GlSubCategoryService;
 import com.lbt.icon.sec.security.domain.activesession.ActiveSessionService;
 import com.lbt.icon.sec.security.util.SecurityUtil;
 import lombok.val;
@@ -107,7 +108,7 @@ public class DemandDraftProductControllerTest {
     @SpyBean
     private  DemandDraftProductValidator demandDraftProductValidator;
     @MockBean
-    private  GLSubCategoryService gLSubCategoryService;
+    private GlSubCategoryService gLSubCategoryService;
     @MockBean
     private  GlobalCodeService globalCodeService;
     @SpyBean

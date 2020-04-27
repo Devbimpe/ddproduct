@@ -33,8 +33,9 @@ import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionQueryDto;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionUpdatedDto;
 import com.lbt.icon.functional.mapper.PatchMapper;
-import com.lbt.icon.ledger.setup.glcodes.subcategory.GLSubCategoryService;
-import com.lbt.icon.ledger.setup.glcodes.subcategory.dto.GLSubCategoryDto;
+
+import com.lbt.icon.ledger.setup.glcodes.subcategory.GlSubCategoryService;
+import com.lbt.icon.ledger.setup.glcodes.subcategory.domain.dto.GLSubCategoryDto;
 import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
@@ -76,7 +77,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService;
 
     private final DemandDraftProductValidator demandDraftProductValidator;
-    private final GLSubCategoryService gLSubCategoryService;
+    private final GlSubCategoryService gLSubCategoryService;
     private final GlobalCodeService globalCodeService;
     private final ModelMapper modelMapper;
     private final ExceptionDefinitionService exceptionDefinitionService;
