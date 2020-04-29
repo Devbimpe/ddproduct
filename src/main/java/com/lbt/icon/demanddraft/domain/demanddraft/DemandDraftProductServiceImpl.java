@@ -88,7 +88,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Checkable(
             naturalIdentifier = "naturalId",
             code = "CREATE_DEMAND_DRAFT",
-            operation = Checkable.Operation.Insert,
+            operation = Checkable.Operation.INSERT,
             description = "create demand draft product record",
             dtoClass = CreateDemandDraftProductDTO.class,
             returnClass = QueryDemandDraftProductDTO.class,
@@ -228,7 +228,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Checkable(
             naturalIdentifier = "productCode",
             code = "UPDATE_DEMAND_DRAFT",
-            operation = Checkable.Operation.Update,
+            operation = Checkable.Operation.UPDATE,
             description = "update demand draft product record",
             dtoClass = UpdateDemandDraftProductWithDependenciesDTO.class,
             returnClass = UpdateDemandDraftProductWithDependenciesDTO.class,
@@ -303,7 +303,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Checkable(
             code="ENABLE_DEMAND_DRAFT",
             description="Enable a demand draft product",
-            operation=Checkable.Operation.Others,
+            operation=Checkable.Operation.OTHERS,
             returnClass=BankProductMasterDTO.class,
             dtoValidators = @DtoValidator(
                     validatorClass = BankProductMasterValidator.class,
@@ -330,7 +330,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Checkable(
             code="DISABLE_DEMAND_DRAFT",
             description="Disable a demand draft product",
-            operation=Checkable.Operation.Others,
+            operation=Checkable.Operation.OTHERS,
             returnClass=BankProductMasterDTO.class,
             dtoValidators = @DtoValidator(
                     validatorClass = BankProductMasterValidator.class,
