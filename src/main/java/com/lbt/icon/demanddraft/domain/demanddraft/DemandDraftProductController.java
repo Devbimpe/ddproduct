@@ -73,7 +73,7 @@ public class DemandDraftProductController {
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}/update")
     public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependenciesById(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("id") Long id) throws IconException {
         ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
