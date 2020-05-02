@@ -48,11 +48,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.util.StringUtils;
+
 
 import javax.validation.constraints.NotBlank;
-import java.sql.Date;
-import java.sql.Timestamp;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,7 +62,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(rollbackFor = Exception.class, noRollbackFor = IconException.class)
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
     private final BankBranchRepo bankBranchRepo;
@@ -98,6 +96,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     validateMethod = "validate"
             ) ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
         BankProductMasterDTO bpm = null;
