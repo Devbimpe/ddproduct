@@ -23,7 +23,7 @@ public class QueryDemandDraftProductInstrDTO extends BaseDTO implements Serializ
 
     private String instrCode;
 
-    private String instrTranType;
+//    private String instrTranType;
 
 
 }

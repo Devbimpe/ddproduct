@@ -52,7 +52,7 @@ public class DemandDraftProductController {
         apiResponseBase.setSuccessMessage("Demand draft product created successfully");
         dto.setProductCode(dto.getBankProduct().getProductCode());
         dto.getBankProduct().setProductTypeCode(BankProductType.DDRAFT);
-        log.info("here is  the request dto {}", dto);
+        log.info("here is  the request dto naturalid{}", dto.getProductCode());
         apiResponseBase.setResponse(demandDraftProductService.create(dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.CREATED);
     }
