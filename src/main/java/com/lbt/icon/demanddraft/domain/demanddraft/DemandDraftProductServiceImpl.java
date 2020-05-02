@@ -5,8 +5,6 @@ import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranch;
 import com.lbt.icon.bankcommons.domain.company.bankbranch.BankBranchRepo;
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.dto.GlobalCodeDTO;
-import com.lbt.icon.bankcommons.domain.nextnumbergenerator.NextNumberGeneratorService;
-import com.lbt.icon.bankcommons.domain.nextnumbergenerator.dto.NextNumberGeneratorCodeDTO;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranch;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranchRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
@@ -40,6 +38,7 @@ import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -62,6 +61,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
     private final BankBranchRepo bankBranchRepo;
@@ -84,7 +84,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
     @Override
     @Checkable(
-            naturalIdentifier = "naturalId",
+            naturalIdentifier = "productCode",
             code = "CREATE_DEMAND_DRAFT",
             operation = Checkable.Operation.INSERT,
             description = "create demand draft product record",
@@ -99,6 +99,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
+        log.info("here is the request dto {}", dto);
+
         BankProductMasterDTO bpm = null;
         demandDraftProductValidator.validate(dto);
         QueryDemandDraftProductDTO queryDemandDraftProductDTO = null;
@@ -153,6 +155,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             demandDraftProductInquiryDTO.setExceptionDto(exceptionDTOS);
         }
 
+        demandDraftProductInquiryDTO.setId(demandDraftProduct.getId());
         demandDraftProductInquiryDTO.setProductCode(productCode);
         demandDraftProductInquiryDTO.setBankProduct(bankProductMasterService.findByDemandDraftProductCode(productCode));
 
@@ -172,6 +175,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(demandDraftProduct.getProductCode());
 
+        demandDraftProductInquiryDTO.setId(id);
         demandDraftProductInquiryDTO.setBankProduct(bankProductMasterDTO);
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);

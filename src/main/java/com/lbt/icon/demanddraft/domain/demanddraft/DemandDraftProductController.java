@@ -15,6 +15,7 @@ import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -34,7 +35,7 @@ import java.util.UUID;
 @Api(value = "demanddrafts Controller", protocols = "https", description = "For demanddrafts Operations.")
 @RequestMapping("v1/demanddrafts")
 @RestController
-
+@Slf4j
 public class DemandDraftProductController {
     private final DemandDraftProductService demandDraftProductService;
     private final BankProductContextSearch accountProductService;
@@ -49,8 +50,9 @@ public class DemandDraftProductController {
     public ResponseEntity<ApiResponseBase<QueryDemandDraftProductDTO>> create(@RequestBody CreateDemandDraftProductDTO dto) throws IconException {
         ApiResponseBase<QueryDemandDraftProductDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product created successfully");
-        dto.setNaturalId(dto.getBankProduct().getProductCode());
+        dto.setProductCode(dto.getBankProduct().getProductCode());
         dto.getBankProduct().setProductTypeCode(BankProductType.DDRAFT);
+        log.info("here is  the request dto {}", dto);
         apiResponseBase.setResponse(demandDraftProductService.create(dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.CREATED);
     }

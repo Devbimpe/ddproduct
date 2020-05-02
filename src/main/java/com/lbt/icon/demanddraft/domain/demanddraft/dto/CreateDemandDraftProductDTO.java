@@ -36,7 +36,7 @@ public class CreateDemandDraftProductDTO implements Serializable {
     @NotNull
     private DemandDraftProductTranCodeLimitDTO[] demandDraftProductTranCodeLimits;
 
-    private String naturalId;
+    private String productCode;
 
 
 }
