@@ -167,10 +167,12 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     public DemandDraftProductInquiryDTO findById(Long id) throws IconException {
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByIdOrThrow(id, new EntityNotFoundException(String.format("Demand Draft Product %s Not found", id)).toString());
+        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.findByDemandDraftProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(demandDraftProduct.getProductCode());
 
+        demandDraftProductInquiryDTO.setBankProduct(bankProductMasterDTO);
         demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
         demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
         demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
