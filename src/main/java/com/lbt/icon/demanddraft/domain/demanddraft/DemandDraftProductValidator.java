@@ -78,7 +78,7 @@ public class DemandDraftProductValidator {
 //            fieldValidationErrors.add(error);
 //        }
         if(!nextNumberGeneratorService.existsByCode(dto.getBankProduct().getAccountNoGenCode())){
-            FieldValidationError error = new FieldValidationError("accountNoGenCode", "Account No Gen Code Code is not available " );
+            FieldValidationError error = new FieldValidationError("accountNoGenCode", "Account No Gen Code Code does not exist" );
             fieldValidationErrors.add(error);
         }
 
