@@ -235,8 +235,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             identifierFinderConfigs = {
                     @IdentifierFinderConfig(
                             finderClass = DemandDraftProductServiceImpl.class,
-                            finderMethod = "findById",
-                            identifierClass = Long.class
+                            finderMethod = "inquireByProductCode",
+                            identifierClass = String.class
                     )
             },
 
@@ -281,6 +281,58 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         return update;
     }
 
+
+    @Override
+    @Checkable(
+            naturalIdentifier = "productCode",
+            code = "UPDATE_DEMAND_DRAFT",
+            operation = Checkable.Operation.UPDATE,
+            description = "update demand draft product record",
+            dtoClass = UpdateDemandDraftProductWithDependenciesDTO.class,
+            returnClass = UpdateDemandDraftProductWithDependenciesDTO.class,
+
+            identifierFinderConfigs = {
+                    @IdentifierFinderConfig(
+                            finderClass = DemandDraftProductServiceImpl.class,
+                            finderMethod = "findById",
+                            identifierClass = Long.class
+                    )
+            },
+
+            dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
+                    paramTypes = {String.class, UpdateDemandDraftProductWithDependenciesDTO.class},
+                    validateMethod = "validateUpdate"
+            ),approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
+    @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
+    public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(Long id, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
+        DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(dto.getBankProduct().getProductCode()).orElseThrow(() ->
+                new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", dto.getBankProduct().getProductCode())));
+        demandDraftProductValidator.validateUpdate(dto.getProductCode(),dto);
+
+        demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
+
+        UpdateDemandDraftProductWithDependenciesDTO update = new UpdateDemandDraftProductWithDependenciesDTO();
+        demandDraftProduct = demandDraftProductRepository.update(demandDraftProduct);
+        BankProductMasterDTO bankProductMasterDTO = bankProductMasterService.updateOne(dto.getBankProduct());
+        if (dto.getBankProduct().getExceptionIdentifierCodes() != null) {
+            try {
+                exceptionDefinitionService.updateExceptionDefinitions(dto.getBankProduct().getProductCode(),dto.getBankProduct().getProductTypeCode().getCode(), ExceptionDefinitionUpdatedDto.builder().identifierCodes(dto.getBankProduct().getExceptionIdentifierCodes()).build());
+            } catch (IconException e) {
+                e.printStackTrace();
+                throw new IconException(e.getMessage());
+            }
+
+        }
+        update.setDemandDraftProduct(modelMapper.map(demandDraftProduct, QueryDemandDraftProductDTO.class));
+        update.setBankProduct(modelMapper.map(bankProductMasterDTO, UpdateBankProductMasterDTO.class));
+        update.setDemandDraftProductCharges(this.updateCharges(dto.getDemandDraftProductCharges(), dto.getBankProduct().getProductCode()));
+        update.setDemandDraftProductInstruments(this.updateInstrument(dto.getDemandDraftProductInstruments(), dto.getBankProduct().getProductCode()));
+        update.setDemandDraftProductTranCodeLimits(this.updateTranCode(dto.getDemandDraftProductTranCodeLimits(), dto.getBankProduct().getProductCode()));
+
+        return update;
+    }
 
     @Override
     public Page<BankProductMasterDTO> findAll(Pageable pageable, BankProductType productType) throws IconQueryException {

@@ -73,6 +73,16 @@ public class DemandDraftProductController {
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependenciesById(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("id") Long id) throws IconException {
+        ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
+        apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
+        dto.setProductCode(dto.getBankProduct().getProductCode());
+        apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(id,dto));
+        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
+    }
+
+
     @GetMapping
     public ResponseEntity<ApiResponseBase<Page<BankProductMasterDTO>>> findAllByProductType(Pageable pageable, @RequestParam("productTypeCode") BankProductType productType) throws IconQueryException{
         ApiResponseBase<Page<BankProductMasterDTO>> apiResponseBase = new ApiResponseBase();
