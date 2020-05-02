@@ -235,8 +235,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             identifierFinderConfigs = {
                     @IdentifierFinderConfig(
                             finderClass = DemandDraftProductServiceImpl.class,
-                            finderMethod = "inquireByProductCode",
-                            identifierClass = String.class
+                            finderMethod = "findById",
+                            identifierClass = Long.class
                     )
             },
 
