@@ -245,6 +245,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     validateMethod = "validateUpdate"
             ),approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(String productCode,UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
 
@@ -298,7 +299,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,EntityNotFoundException.class} )
     @Checkable(
             code="ENABLE_DEMAND_DRAFT",
             description="Enable a demand draft product",
@@ -325,7 +326,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,EntityNotFoundException.class} )
     @Checkable(
             code="DISABLE_DEMAND_DRAFT",
             description="Disable a demand draft product",
