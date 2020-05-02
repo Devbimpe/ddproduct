@@ -300,7 +300,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             },
 
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
-                    paramTypes = {String.class, UpdateDemandDraftProductWithDependenciesDTO.class},
+                    paramTypes = {Long.class, UpdateDemandDraftProductWithDependenciesDTO.class},
                     validateMethod = "validateUpdate"
             ),approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
@@ -309,7 +309,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(Long id, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(dto.getBankProduct().getProductCode()).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", dto.getBankProduct().getProductCode())));
-        demandDraftProductValidator.validateUpdate(dto.getProductCode(),dto);
+        demandDraftProductValidator.validateUpdate(id,dto);
 
         demandDraftProduct = PatchMapper.of(() -> dto.getDemandDraftProduct()).map(demandDraftProduct).get();
 

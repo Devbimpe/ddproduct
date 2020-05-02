@@ -206,4 +206,54 @@ public class DemandDraftProductValidator {
 
     }
 
+    public void validateUpdate(Long id, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
+        List<FieldValidationError> fieldValidationErrors = CommonUtils.getStaticFieldValidationErrors(
+                dto.getDemandDraftProduct(), validator
+        );
+        if (!fieldValidationErrors.isEmpty()) {
+            throw new FieldValidationException("Insert validation failed", fieldValidationErrors);
+        }
+
+        if(!repo.existsById(id)){
+            FieldValidationError error = new FieldValidationError();
+            error.setFieldName("Id");
+            error.setMessage("Id does not exist -> " + id);
+
+            fieldValidationErrors.add(error);
+            throw new FieldValidationException("Update validation failed", fieldValidationErrors);
+
+        }
+
+        if (null == dto.getBankProduct().getProductCode())  {
+            FieldValidationError error = new FieldValidationError("productCode", "Invalid productCode");
+            fieldValidationErrors.add(error);
+            throw new FieldValidationException("Insert validation failed", fieldValidationErrors);
+        }
+
+
+
+        Boolean productCodeExists = repo.existsByProductCode(dto.getBankProduct().getProductCode());
+        if(!productCodeExists){
+            FieldValidationError error = new FieldValidationError();
+            error.setFieldName("productCode");
+            error.setMessage("Product code not found -> " + dto.getBankProduct().getProductCode());
+
+            fieldValidationErrors.add(error);
+            throw new FieldValidationException("Update validation failed", fieldValidationErrors);
+
+        }
+
+        try {
+            bankProductMasterValidator.validateProductUpdate(modelMapper.map(dto.getBankProduct(), UpdateBankProductMasterDTO.class));
+        } catch (FieldValidationException e) {
+            fieldValidationErrors.addAll(e.getFieldValidationErrors());
+            throw new FieldValidationException("Update validation failed", fieldValidationErrors);
+        }
+
+
+
+
+    }
+
+
 }

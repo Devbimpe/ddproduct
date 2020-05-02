@@ -18,6 +18,7 @@ import java.util.Optional;
 public interface DemandDraftProductRepository extends GenericRepository<DemandDraftProduct, Long> {
     Boolean existsByProductCode(String productCode);
 
+
     Optional<DemandDraftProduct> findByProductCode(String productCode);
 
     List<DemandDraftProduct> findByProductCodeContaining(String productCode);
