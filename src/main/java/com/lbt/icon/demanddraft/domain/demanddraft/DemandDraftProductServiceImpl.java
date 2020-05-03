@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
     private final BankBranchRepo bankBranchRepo;
@@ -98,7 +99,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
-    public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws IconException {
+    public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws FieldValidationException,EntityNotFoundException, IconQueryException ,IconException{
         log.info("here is the request dto {}", dto);
 
         BankProductMasterDTO bpm = null;

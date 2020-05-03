@@ -22,7 +22,7 @@ import java.util.List;
 
 public interface DemandDraftProductService {
 
-    QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO demandDraftProductDTO) throws IconException;
+    QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO demandDraftProductDTO) throws FieldValidationException,EntityNotFoundException,IconQueryException, IconException;
 
 
     DemandDraftProductInquiryDTO inquireByProductCode(String productCode) throws IconException;
