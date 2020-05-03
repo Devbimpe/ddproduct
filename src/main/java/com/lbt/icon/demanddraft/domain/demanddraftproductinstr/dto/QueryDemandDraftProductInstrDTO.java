@@ -23,7 +23,7 @@ public class QueryDemandDraftProductInstrDTO extends BaseDTO implements Serializ
 
     private String instrCode;
 
-    private String instrCategory;
+    private String instrumentCategory;
 //    private String instrTranType;
 
 

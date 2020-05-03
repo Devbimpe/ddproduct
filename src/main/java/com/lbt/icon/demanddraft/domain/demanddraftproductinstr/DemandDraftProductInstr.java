@@ -34,7 +34,7 @@ public class DemandDraftProductInstr extends BaseEntity {
     private String instrCode;
 
     @Column(name = "instr_category")
-    private String instrCategory;
+    private String instrumentCategory;
 
     @Column(name = "instr_tran_type")
     @Enumerated(EnumType.STRING)
