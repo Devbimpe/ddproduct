@@ -62,7 +62,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(rollbackFor = Exception.class)
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
     private final BankBranchRepo bankBranchRepo;
