@@ -66,14 +66,14 @@ public class DemandDraftProductController {
     }
 
 
-    @PutMapping("{productCode}")
-    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependencies(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("productCode") String productCode) throws IconException {
-        ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
-        apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
-        dto.setProductCode(productCode);
-        apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(productCode,dto));
-        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
-    }
+//    @PutMapping("{productCode}")
+//    public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependencies(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("productCode") String productCode) throws IconException {
+//        ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
+//        apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
+//        dto.setProductCode(productCode);
+//        apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(productCode,dto));
+//        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
+//    }
 
     @PutMapping("/{id}/update")
     public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependenciesById(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("id") Long id) throws IconException {
@@ -81,7 +81,7 @@ public class DemandDraftProductController {
         apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
         dto.setProductCode(dto.getBankProduct().getProductCode());
         log.info("dto is{}", dto);
-        apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(id,dto));
+        apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependenciesById(id,dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }
 
