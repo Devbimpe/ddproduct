@@ -27,7 +27,7 @@ public class UpdateDemandDraftProductWithDependenciesDTO extends BaseDTO impleme
 
     private static final long serialVersionUUID = 1L;
 
-    @JsonIgnore
+
     private String productCode;
     private UpdateBankProductMasterDTO bankProduct;
     private QueryDemandDraftProductDTO demandDraftProduct;
