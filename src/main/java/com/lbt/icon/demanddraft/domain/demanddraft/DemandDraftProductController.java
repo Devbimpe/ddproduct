@@ -80,6 +80,7 @@ public class DemandDraftProductController {
         ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
         apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
         dto.setProductCode(dto.getBankProduct().getProductCode());
+        log.info("dto is{}", dto);
         apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependencies(id,dto));
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
     }

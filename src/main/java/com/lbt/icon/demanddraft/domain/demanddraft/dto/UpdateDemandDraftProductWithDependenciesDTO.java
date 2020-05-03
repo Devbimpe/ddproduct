@@ -8,9 +8,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraft
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.QueryDemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDraftProductInstrDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,10 +17,13 @@ import java.util.List;
  * @author devbimpe
  */
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Setter
+
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 public class UpdateDemandDraftProductWithDependenciesDTO extends BaseDTO implements Serializable {
 
     private static final long serialVersionUUID = 1L;

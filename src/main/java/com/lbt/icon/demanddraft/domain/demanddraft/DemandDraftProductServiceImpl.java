@@ -313,6 +313,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependencies(Long id, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
+        log.info("dto is{}", dto);
         DemandDraftProduct demandDraftProduct = demandDraftProductRepository.findByProductCode(dto.getBankProduct().getProductCode()).orElseThrow(() ->
                 new EntityNotFoundException(String.format("Demand DraftProduct %s Not found", dto.getBankProduct().getProductCode())));
         demandDraftProductValidator.validateUpdate(id,dto);
