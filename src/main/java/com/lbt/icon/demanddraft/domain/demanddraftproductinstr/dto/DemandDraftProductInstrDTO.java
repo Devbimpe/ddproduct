@@ -20,6 +20,6 @@ public class DemandDraftProductInstrDTO implements Serializable {
 
     private String instrCode;
 
-
+    private String instrCategory;
 
 }

@@ -174,6 +174,10 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(demandDraftProduct.getProductCode());
         List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(demandDraftProduct.getProductCode());
+        List<ExceptionDefinitionQueryDto> exceptionDTOS = exceptionDefinitionService.findByProductCodeAndProductTypeCode(demandDraftProduct.getProductCode(),BankProductType.DDRAFT.getCode());
+        if (exceptionDTOS != null && !exceptionDTOS.isEmpty()) {
+            demandDraftProductInquiryDTO.setExceptionDto(exceptionDTOS);
+        }
 
         demandDraftProductInquiryDTO.setId(id);
         demandDraftProductInquiryDTO.setBankProduct(bankProductMasterDTO);
