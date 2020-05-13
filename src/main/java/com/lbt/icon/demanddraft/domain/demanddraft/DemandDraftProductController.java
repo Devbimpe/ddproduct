@@ -1,6 +1,7 @@
 package com.lbt.icon.demanddraft.domain.demanddraft;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lbt.icon.bankproduct.domain.master.BankProductMaster;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.search.BankProductContextSearch;
 import com.lbt.icon.bankproduct.domain.master.search.BankProductMasterSearchParams;
@@ -17,7 +18,9 @@ import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -222,6 +225,54 @@ public class DemandDraftProductController {
     			null),
     		HttpStatus.OK);
     }
+
+
+    @GetMapping("/searchbybranchcurrencyglsubcodeorinstrument")
+    public ResponseEntity<ApiResponseBase<Page<BankProductMaster>>> searchBankProductMasterByBranchCurrencyGlOrInstrument(
+
+            @RequestParam(value="branchCode", required=false) String branchCode,
+            @RequestParam(value="currencyCode", required=false) String currencyCode,
+            @RequestParam(value="glSubCode", required=false) String glSubCode,
+            @RequestParam(value="instrumentCode", required=false) String instrumentCode,
+            @RequestParam(value="productCode", required=false) String productCode,
+            @RequestParam(value="productName", required=false) String productName,
+            @RequestParam(value="productStatus", required=false) String productStatus,
+            @RequestParam(value="spacerCode", required=false) String spacerCode,
+            @RequestParam(value="accountNoGenCode", required=false) String accountNoGenCode,
+
+            @RequestParam(value="currentPage", required=true) Integer currentPage,
+            @RequestParam(value="pageSize", required=true) Integer pageSize,
+            @RequestParam(value="orderBy", required=false) String orderBy,
+            @RequestParam(value="sortOrder", required=false) String sortOrder) throws EntityNotFoundException, IconQueryException {
+
+        Page<BankProductMaster> queryDtos = demandDraftProductService.findBankProductMasterByBranchCurrencyGlOrInstrument(
+                OfficeProductContextSearchDto.builder()
+                        .branchCode(branchCode)
+                        .currencyCode(currencyCode)
+                        .glSubCode(glSubCode)
+                        .instrumentCode(instrumentCode)
+                        .productCode(productCode)
+                        .productName(productName)
+                        .productStatus(productStatus)
+                        .spacerCode(spacerCode)
+                        .accountNoGenCode(accountNoGenCode)
+                        .build(),
+                PageRequest.of(currentPage,pageSize, Sort.by("id").descending()));
+
+        return new ResponseEntity<>(
+                new ApiResponseBase<>(
+                        queryDtos,
+                        HttpStatus.OK.name(),
+                        false,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null),
+                HttpStatus.OK);
+    }
+
 }
 
 

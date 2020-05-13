@@ -8,6 +8,7 @@ import com.lbt.icon.core.domain.BaseDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.QueryDemandDraftProductChargesDTO;
 import com.lbt.icon.demanddraft.type.DDTransferFrequency;
 import com.lbt.icon.demanddraft.type.DemandDraftType;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -78,6 +79,7 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
 
     private String defaultCustodian;
 
+    private InstrumentSeries instrumentSeries;
 
 
 }

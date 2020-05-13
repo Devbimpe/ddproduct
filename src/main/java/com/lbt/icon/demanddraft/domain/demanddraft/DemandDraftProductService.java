@@ -2,6 +2,7 @@
 package com.lbt.icon.demanddraft.domain.demanddraft;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lbt.icon.bankproduct.domain.master.BankProductMaster;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.core.exception.EntityNotFoundException;
@@ -10,6 +11,7 @@ import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotBlank;
@@ -58,6 +60,11 @@ public interface DemandDraftProductService {
 
 
 	List<DemandDraftProductGlDto> findGlsByProductCode(String productCode);
+
+
+    Page<BankProductMaster> findBankProductMasterByBranchCurrencyGlOrInstrument(OfficeProductContextSearchDto officeProductContextSearchDto, PageRequest pageRequest) throws EntityNotFoundException, IconQueryException;
+
+
 
     //public Page<BankProductMasterDTO> search(String reportDescription, String fromDate, String toDate, Pageable pageable) throws IconException
 }

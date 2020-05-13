@@ -102,6 +102,8 @@ public class DemandDraftProduct extends BaseEntity {
     @Column(name = "default_custodian")
     private String defaultCustodian;
 
+    @Column(name = "instrument_series")
+    private String instrumentSeries;
 
 
 

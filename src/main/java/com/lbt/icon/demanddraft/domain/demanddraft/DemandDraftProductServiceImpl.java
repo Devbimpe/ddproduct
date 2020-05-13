@@ -7,6 +7,7 @@ import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.dto.GlobalCodeDTO;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranch;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranchRepo;
+import com.lbt.icon.bankproduct.domain.master.BankProductMaster;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
@@ -15,6 +16,7 @@ import com.lbt.icon.bankproduct.domain.master.dto.UpdateBankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGL;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
+import com.lbt.icon.bankproduct.types.ProductStatus;
 import com.lbt.icon.core.exception.*;
 import com.lbt.icon.demanddraft.config.DDProductPermissionEnum;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
@@ -42,13 +44,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotBlank;
 
 import java.util.*;
@@ -80,6 +85,30 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final ModelMapper modelMapper;
     private final ExceptionDefinitionService exceptionDefinitionService;
 
+    EntityManager entityManager;
+
+
+    private static final String PRODUCT_TYPE_CODE = "productTypeCode";
+
+    private static final String SPACER_CODE = "spacerCode";
+
+    private static final String ACCOUNT_NO_GENCODE = "accountNoGenCode";
+
+    private static final String PRODUCT_STATUS = "productStatus";
+
+    private static final String PRODUCT_NAME = "productName";
+
+    private static final String PRODUCT_CODE = "productCode";
+
+    private static final String INSTRUMENT_CODE = "instrumentCode";
+
+    private static final String GL_SUB_CODE = "glSubCode";
+
+    private static final String CURRENCY_CODE = "currencyCode";
+
+    private static final String BRANCH_CODE = "branchCode";
+
+    private static final String WHERE = "where";
 
 
     @Override
@@ -535,6 +564,139 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private List<QueryDemandDraftProductTranCodeLimitDTO> updateTranCode(List<QueryDemandDraftProductTranCodeLimitDTO> demandDraftProductTranCodeLimits, String productCode) throws IconException {
         return demandDraftProductTranCodeLimitService.updateTranCodeBatch(productCode, demandDraftProductTranCodeLimits);
     }
+
+
+    @Override
+    public Page<BankProductMaster> findBankProductMasterByBranchCurrencyGlOrInstrument(OfficeProductContextSearchDto searchDto, PageRequest pageRequest) throws EntityNotFoundException, IconQueryException {
+
+        resetContextSearchDto(searchDto);
+
+        String select = prepareContextSearchSql(searchDto);
+        select = prepareContextSearchWhereClause(searchDto, select);
+        select = prepareContextSearchAndClause(searchDto, select);
+        select = prepareContextSearchPrimaryClause(select);
+        select += " order by o.createdDate desc";
+
+        TypedQuery<BankProductMaster> q = entityManager.createQuery(select,BankProductMaster.class);
+
+        int sizePerPage=pageRequest.getPageSize();
+        int page=pageRequest.getPageNumber();
+
+        setParameterToSqlFetch(searchDto, select, q);
+
+        log.info("Query -> {}",select);
+
+        q.setMaxResults(sizePerPage);
+        q.setFirstResult(page * sizePerPage);
+        List<BankProductMaster> results = q.getResultList();
+
+        String select2 = select.replaceFirst("distinct o", " count(distinct o.id) ");
+        Query q2 = entityManager.createQuery(select2);
+        setParameterToSqlCount(searchDto, select, q2);
+
+        log.info("Count -> {}",select2);
+
+        return new PageImpl<>(results,pageRequest,(long)q2.getSingleResult());
+    }
+
+    private void setParameterToSqlCount(OfficeProductContextSearchDto searchDto, String select, Query q2) {
+
+        if(!searchDto.getBranchCode().isEmpty() && select.indexOf(BRANCH_CODE) > -1) 			q2.setParameter(BRANCH_CODE, searchDto.getBranchCode());
+        if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(CURRENCY_CODE) > -1) 		q2.setParameter(CURRENCY_CODE, searchDto.getCurrencyCode());
+        if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(GL_SUB_CODE) > -1) 			q2.setParameter(GL_SUB_CODE, searchDto.getGlSubCode());
+        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q2.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
+        if(!searchDto.getProductCode().isEmpty() && select.indexOf(PRODUCT_CODE) > -1) 		q2.setParameter(PRODUCT_CODE, searchDto.getProductCode());
+        if(!searchDto.getProductName().isEmpty() && select.indexOf(PRODUCT_NAME) > -1) 		q2.setParameter(PRODUCT_NAME, searchDto.getProductName());
+        if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(SPACER_CODE) > -1) 			q2.setParameter(SPACER_CODE, searchDto.getSpacerCode());
+        if(!searchDto.getAccountNoGenCode().isEmpty() && select.indexOf(ACCOUNT_NO_GENCODE) > -1) 			q2.setParameter(ACCOUNT_NO_GENCODE, searchDto.getAccountNoGenCode());
+        setDefaultCountParams(searchDto, select, q2);
+    }
+
+    private void setDefaultCountParams(OfficeProductContextSearchDto searchDto, String select, Query q2) {
+        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)
+            q2.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
+        else
+            q2.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
+        q2.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.OFFICE);
+    }
+
+    private void setParameterToSqlFetch(OfficeProductContextSearchDto searchDto, String select,	TypedQuery<BankProductMaster> q) {
+
+        if(!searchDto.getBranchCode().isEmpty() && select.indexOf(BRANCH_CODE) > -1) 			q.setParameter(BRANCH_CODE, searchDto.getBranchCode());
+        if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(CURRENCY_CODE) > -1) 		q.setParameter(CURRENCY_CODE, searchDto.getCurrencyCode());
+        if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(GL_SUB_CODE) > -1) 			q.setParameter(GL_SUB_CODE, searchDto.getGlSubCode());
+        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
+        if(!searchDto.getProductCode().isEmpty() && select.indexOf(PRODUCT_CODE) > -1) 		q.setParameter(PRODUCT_CODE, searchDto.getProductCode());
+        if(!searchDto.getProductName().isEmpty() && select.indexOf(PRODUCT_NAME) > -1) 		q.setParameter(PRODUCT_NAME, searchDto.getProductName());
+        if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(SPACER_CODE) > -1) 			q.setParameter(SPACER_CODE, searchDto.getSpacerCode());
+        if(!searchDto.getAccountNoGenCode().isEmpty() && select.indexOf(ACCOUNT_NO_GENCODE) > -1) 			q.setParameter(ACCOUNT_NO_GENCODE, searchDto.getAccountNoGenCode());
+        setDefaultFetchParams(searchDto, select, q);
+    }
+
+    private void setDefaultFetchParams(OfficeProductContextSearchDto searchDto, String select, TypedQuery<BankProductMaster> q) {
+        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)
+            q.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
+        else
+            q.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
+        q.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.OFFICE);
+    }
+
+    private String prepareContextSearchPrimaryClause(String select) {
+
+        if(select.indexOf(WHERE) > -1) {
+            select += " and o.productTypeCode=:productTypeCode and o.productStatus=:productStatus";
+        } else {
+            select += " where o.productTypeCode=:productTypeCode and o.productStatus=:productStatus";
+        }
+        return select;
+    }
+
+    private String prepareContextSearchAndClause(OfficeProductContextSearchDto searchDto, String select) {
+        if(!searchDto.getProductCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(PRODUCT_CODE) == -1) select += " and o.productCode like concat('%',:productCode,'%') ";
+        if(!searchDto.getProductName().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(PRODUCT_NAME) == -1) select += " and o.productName like concat('%',:productName,'%') ";
+        if(!searchDto.getBranchCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(BRANCH_CODE) == -1) select += " and r.branchCode like concat('%',:branchCode,'%') ";
+        if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(CURRENCY_CODE) == -1) select += " and c.currencyCode like concat('%',:currencyCode,'%')  ";
+        if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(GL_SUB_CODE) == -1) select += " and g.glsubCode like concat('%',:glSubCode,'%') ";
+        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(INSTRUMENT_CODE) == -1) select += " and i.instrumentCode like concat('%',:instrumentCode,'%') ";
+        if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(SPACER_CODE) == -1) select += " and s.spacerCode like concat('%',:spacerCode,'%') ";
+        if(!searchDto.getAccountNoGenCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(ACCOUNT_NO_GENCODE) == -1) select += " and o.accountNoGenCode like concat('%',:accountNoGenCode,'%') ";
+        return select;
+    }
+
+    private String prepareContextSearchWhereClause(OfficeProductContextSearchDto searchDto, String select) {
+        if(!searchDto.getBranchCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where r.branchCode like concat('%',:branchCode,'%') ";
+        if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where c.currencyCode like concat('%',:currencyCode,'%')  ";
+        if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where g.glsubCode like concat('%',:glSubCode,'%') ";
+        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where i.instrumentCode like concat('%',:instrumentCode,'%') ";
+        if(!searchDto.getProductCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where o.productCode like concat('%',:productCode,'%') ";
+        if(!searchDto.getProductName().isEmpty() && select.indexOf(WHERE) == -1) select += " where o.productName like concat('%',:productName,'%') ";
+        if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where s.spacerCode like concat('%',:spacerCode,'%') ";
+        if(!searchDto.getAccountNoGenCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where o.accountNoGenCode like concat('%',:accountNoGenCode,'%') ";
+        return select;
+    }
+
+    private String prepareContextSearchSql(OfficeProductContextSearchDto searchDto) {
+        String select = "select distinct o from BankProductMaster o ";
+        if(!searchDto.getBranchCode().isEmpty()) select += " left join fetch BankProductBranch r on o.productCode = r.productCode ";
+        if(!searchDto.getCurrencyCode().isEmpty()) select += " left join fetch BankProductCurrency c on o.productCode = c.productCode ";
+        if(!searchDto.getGlSubCode().isEmpty()) select += " left join fetch BankProductGL g on o.productCode = g.productCode ";
+        if(!searchDto.getInstrumentCode().isEmpty()) select += " left join fetch BankProductInstrument i on o.productCode = i.productCode ";
+        if(!searchDto.getSpacerCode().isEmpty()) select += " left join fetch OfficeProductSpacerCode s on o.productCode = s.productCode ";
+        return select;
+    }
+
+    private void resetContextSearchDto(OfficeProductContextSearchDto searchDto) {
+        searchDto.setBranchCode(searchDto.getBranchCode() != null ? searchDto.getBranchCode().trim() : "");
+        searchDto.setCurrencyCode(searchDto.getCurrencyCode() != null ? searchDto.getCurrencyCode().trim() : "");
+        searchDto.setGlSubCode(searchDto.getGlSubCode() != null ? searchDto.getGlSubCode().trim() : "");
+        searchDto.setInstrumentCode(searchDto.getInstrumentCode() != null ? searchDto.getInstrumentCode().trim() : "");
+        searchDto.setProductCode(searchDto.getProductCode() != null ? searchDto.getProductCode().trim() : "");
+        searchDto.setProductName(searchDto.getProductName() != null ? searchDto.getProductName().trim() : "");
+        searchDto.setProductStatus(searchDto.getProductStatus() != null ? searchDto.getProductStatus().trim() : "");
+        searchDto.setSpacerCode(searchDto.getSpacerCode() != null ? searchDto.getSpacerCode().trim() : "");
+        searchDto.setAccountNoGenCode(searchDto.getAccountNoGenCode() != null ? searchDto.getAccountNoGenCode().trim() : "");
+    }
+
 
 
 }

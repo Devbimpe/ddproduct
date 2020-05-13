@@ -36,6 +36,9 @@ public class DemandDraftProductInstr extends BaseEntity {
     @Column(name = "instr_category")
     private String instrumentCategory;
 
+    @Column(name = "default")
+    private boolean isDefault;
+
     @Column(name = "instr_tran_type")
     @Enumerated(EnumType.STRING)
     private InstrumentTransactionType instrTranType;

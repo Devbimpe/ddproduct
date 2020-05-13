@@ -22,4 +22,6 @@ public class DemandDraftProductInstrDTO implements Serializable {
 
     private String instrumentCategory;
 
+    private boolean isDefault;
+
 }

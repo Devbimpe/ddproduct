@@ -6,6 +6,7 @@ import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.core.domain.BaseDTO;
 import com.lbt.icon.demanddraft.type.DDTransferFrequency;
 import com.lbt.icon.demanddraft.type.DemandDraftType;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -82,6 +83,7 @@ public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable 
 
     private String defaultCustodian;
 
+    private InstrumentSeries instrumentSeries;
 
 
 }

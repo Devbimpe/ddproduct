@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.demanddraft.type.DDTransferFrequency;
 import com.lbt.icon.demanddraft.type.DemandDraftType;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -76,6 +77,8 @@ public class DemandDraftProductDTO implements Serializable {
     private String commonDDAccountId;
 
     private String defaultCustodian;
+
+    private InstrumentSeries instrumentSeries;
 
 
 }
