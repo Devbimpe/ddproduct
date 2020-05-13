@@ -18,6 +18,7 @@ import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.bankproduct.types.ProductStatus;
 import com.lbt.icon.core.exception.*;
+import com.lbt.icon.core.util.DatasourceUtil;
 import com.lbt.icon.demanddraft.config.DDProductPermissionEnum;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesService;
@@ -29,6 +30,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDr
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitService;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
+import com.lbt.icon.demanddraft.domain.util.EntityManagerUtil;
 import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionQueryDto;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionUpdatedDto;
@@ -42,6 +44,7 @@ import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -65,7 +68,6 @@ import java.util.stream.Collectors;
  */
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class DemandDraftProductServiceImpl implements DemandDraftProductService {
 
@@ -84,9 +86,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final GlobalCodeService globalCodeService;
     private final ModelMapper modelMapper;
     private final ExceptionDefinitionService exceptionDefinitionService;
-
-    EntityManager entityManager;
-
+    private EntityManagerUtil entityManagerUtil;
 
     private static final String PRODUCT_TYPE_CODE = "productTypeCode";
 
@@ -110,6 +110,24 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
     private static final String WHERE = "where";
 
+    @Autowired
+    public DemandDraftProductServiceImpl(BankBranchRepo bankBranchRepo, BankProductBranchRepo bankProductBranchRepo, BankProductGLRepo bankProductGLRepo, BankProductMasterRepo bankProductMasterRepo, BankProductMasterService bankProductMasterService, DemandDraftProductChargesService demandDraftProductChargesService, DemandDraftProductInstrService demandDraftProductInstrService, DemandDraftProductRepository demandDraftProductRepository, DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService, DemandDraftProductValidator demandDraftProductValidator, GlSubCategoryService gLSubCategoryService, GlobalCodeService globalCodeService, ModelMapper modelMapper, ExceptionDefinitionService exceptionDefinitionService, EntityManagerUtil entityManagerUtil) {
+        this.bankBranchRepo = bankBranchRepo;
+        this.bankProductBranchRepo = bankProductBranchRepo;
+        this.bankProductGLRepo = bankProductGLRepo;
+        this.bankProductMasterRepo = bankProductMasterRepo;
+        this.bankProductMasterService = bankProductMasterService;
+        this.demandDraftProductChargesService = demandDraftProductChargesService;
+        this.demandDraftProductInstrService = demandDraftProductInstrService;
+        this.demandDraftProductRepository = demandDraftProductRepository;
+        this.demandDraftProductTranCodeLimitService = demandDraftProductTranCodeLimitService;
+        this.demandDraftProductValidator = demandDraftProductValidator;
+        this.gLSubCategoryService = gLSubCategoryService;
+        this.globalCodeService = globalCodeService;
+        this.modelMapper = modelMapper;
+        this.exceptionDefinitionService = exceptionDefinitionService;
+        this.entityManagerUtil = entityManagerUtil;
+    }
 
     @Override
     @Checkable(
@@ -577,7 +595,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         select = prepareContextSearchPrimaryClause(select);
         select += " order by o.createdDate desc";
 
-        TypedQuery<BankProductMaster> q = entityManager.createQuery(select,BankProductMaster.class);
+        log.info("here is entity manager {}", entityManagerUtil.getEntityManager());
+        TypedQuery<BankProductMaster> q = entityManagerUtil.getEntityManager().createQuery(select,BankProductMaster.class);
 
         int sizePerPage=pageRequest.getPageSize();
         int page=pageRequest.getPageNumber();
@@ -591,7 +610,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<BankProductMaster> results = q.getResultList();
 
         String select2 = select.replaceFirst("distinct o", " count(distinct o.id) ");
-        Query q2 = entityManager.createQuery(select2);
+        Query q2 = entityManagerUtil.getEntityManager().createQuery(select2);
         setParameterToSqlCount(searchDto, select, q2);
 
         log.info("Count -> {}",select2);
@@ -617,7 +636,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             q2.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
         else
             q2.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
-        q2.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.OFFICE);
+        q2.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.DDRAFT);
     }
 
     private void setParameterToSqlFetch(OfficeProductContextSearchDto searchDto, String select,	TypedQuery<BankProductMaster> q) {
@@ -638,7 +657,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             q.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
         else
             q.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
-        q.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.OFFICE);
+        q.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.DDRAFT);
     }
 
     private String prepareContextSearchPrimaryClause(String select) {
