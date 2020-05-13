@@ -15,6 +15,7 @@ import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.search.BankProductContextSearch;
 import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
+import com.lbt.icon.core.util.DatasourceUtil;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductCharges;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesRepository;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesService;
@@ -27,6 +28,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDra
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitRepository;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitServiceImpl;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitValidator;
+import com.lbt.icon.demanddraft.domain.util.EntityManagerUtil;
 import com.lbt.icon.demanddraft.type.InstrumentTransactionType;
 import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
 
@@ -86,6 +88,11 @@ public class DemandDraftProductControllerTest {
     @MockBean
     ActiveSessionService activeSessionService;
 
+    @SpyBean
+    private EntityManagerUtil entityManagerUtil;
+
+    @MockBean
+    private DatasourceUtil datasourceUtil;
 
     @MockBean
     private  BankBranchRepo bankBranchRepo;
