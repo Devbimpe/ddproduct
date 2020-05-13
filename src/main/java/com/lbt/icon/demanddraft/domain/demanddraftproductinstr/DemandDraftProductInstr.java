@@ -36,7 +36,7 @@ public class DemandDraftProductInstr extends BaseEntity {
     @Column(name = "instr_category")
     private String instrumentCategory;
 
-    @Column(name = "default")
+    @Column(name = "default_instr")
     private boolean isDefault;
 
     @Column(name = "instr_tran_type")
