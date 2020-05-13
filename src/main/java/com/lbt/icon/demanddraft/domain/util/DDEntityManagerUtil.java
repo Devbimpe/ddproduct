@@ -11,11 +11,11 @@ import javax.persistence.EntityManager;
  */
 @Service
 @Getter
-public class EntityManagerUtil {
+public class DDEntityManagerUtil {
 
     private EntityManager entityManager;
 
-    public EntityManagerUtil(DatasourceUtil datasourceUtil) {
+    public DDEntityManagerUtil(DatasourceUtil datasourceUtil) {
         this.entityManager = datasourceUtil.getEntityManager(DatasourceUtil.EM_BEAN_NAME_DEFAULT);
 
     }

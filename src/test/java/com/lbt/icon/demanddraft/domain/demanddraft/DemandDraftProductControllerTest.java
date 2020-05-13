@@ -8,7 +8,6 @@ import com.lbt.icon.bankcommons.domain.company.financialinstitution.FinancialIns
 import com.lbt.icon.bankcommons.domain.globalparams.globalcode.GlobalCodeService;
 import com.lbt.icon.bankcommons.domain.nextnumbergenerator.NextNumberGeneratorService;
 import com.lbt.icon.bankproduct.domain.branch.BankProductBranchRepo;
-import com.lbt.icon.bankproduct.domain.master.BankProductMaster;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterRepo;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterService;
 import com.lbt.icon.bankproduct.domain.master.BankProductMasterValidator;
@@ -28,7 +27,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDra
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitRepository;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitServiceImpl;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitValidator;
-import com.lbt.icon.demanddraft.domain.util.EntityManagerUtil;
+import com.lbt.icon.demanddraft.domain.util.DDEntityManagerUtil;
 import com.lbt.icon.demanddraft.type.InstrumentTransactionType;
 import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
 
@@ -89,7 +88,7 @@ public class DemandDraftProductControllerTest {
     ActiveSessionService activeSessionService;
 
     @SpyBean
-    private EntityManagerUtil entityManagerUtil;
+    private DDEntityManagerUtil DDEntityManagerUtil;
 
     @MockBean
     private DatasourceUtil datasourceUtil;

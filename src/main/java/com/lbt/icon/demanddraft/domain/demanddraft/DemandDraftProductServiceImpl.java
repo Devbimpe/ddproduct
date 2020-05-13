@@ -18,7 +18,6 @@ import com.lbt.icon.bankproduct.domain.subgl.BankProductGLRepo;
 import com.lbt.icon.bankproduct.types.BankProductType;
 import com.lbt.icon.bankproduct.types.ProductStatus;
 import com.lbt.icon.core.exception.*;
-import com.lbt.icon.core.util.DatasourceUtil;
 import com.lbt.icon.demanddraft.config.DDProductPermissionEnum;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.DemandDraftProductChargesService;
@@ -30,7 +29,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDr
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDraftProductTranCodeLimitService;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
-import com.lbt.icon.demanddraft.domain.util.EntityManagerUtil;
+import com.lbt.icon.demanddraft.domain.util.DDEntityManagerUtil;
 import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionQueryDto;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionUpdatedDto;
@@ -41,7 +40,6 @@ import com.lbt.icon.ledger.setup.glcodes.subcategory.domain.dto.GLSubCategoryDto
 import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +52,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotBlank;
@@ -86,7 +83,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final GlobalCodeService globalCodeService;
     private final ModelMapper modelMapper;
     private final ExceptionDefinitionService exceptionDefinitionService;
-    private EntityManagerUtil entityManagerUtil;
+    private DDEntityManagerUtil DDEntityManagerUtil;
 
     private static final String PRODUCT_TYPE_CODE = "productTypeCode";
 
@@ -111,7 +108,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private static final String WHERE = "where";
 
     @Autowired
-    public DemandDraftProductServiceImpl(BankBranchRepo bankBranchRepo, BankProductBranchRepo bankProductBranchRepo, BankProductGLRepo bankProductGLRepo, BankProductMasterRepo bankProductMasterRepo, BankProductMasterService bankProductMasterService, DemandDraftProductChargesService demandDraftProductChargesService, DemandDraftProductInstrService demandDraftProductInstrService, DemandDraftProductRepository demandDraftProductRepository, DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService, DemandDraftProductValidator demandDraftProductValidator, GlSubCategoryService gLSubCategoryService, GlobalCodeService globalCodeService, ModelMapper modelMapper, ExceptionDefinitionService exceptionDefinitionService, EntityManagerUtil entityManagerUtil) {
+    public DemandDraftProductServiceImpl(BankBranchRepo bankBranchRepo, BankProductBranchRepo bankProductBranchRepo, BankProductGLRepo bankProductGLRepo, BankProductMasterRepo bankProductMasterRepo, BankProductMasterService bankProductMasterService, DemandDraftProductChargesService demandDraftProductChargesService, DemandDraftProductInstrService demandDraftProductInstrService, DemandDraftProductRepository demandDraftProductRepository, DemandDraftProductTranCodeLimitService demandDraftProductTranCodeLimitService, DemandDraftProductValidator demandDraftProductValidator, GlSubCategoryService gLSubCategoryService, GlobalCodeService globalCodeService, ModelMapper modelMapper, ExceptionDefinitionService exceptionDefinitionService, DDEntityManagerUtil DDEntityManagerUtil) {
         this.bankBranchRepo = bankBranchRepo;
         this.bankProductBranchRepo = bankProductBranchRepo;
         this.bankProductGLRepo = bankProductGLRepo;
@@ -126,7 +123,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         this.globalCodeService = globalCodeService;
         this.modelMapper = modelMapper;
         this.exceptionDefinitionService = exceptionDefinitionService;
-        this.entityManagerUtil = entityManagerUtil;
+        this.DDEntityManagerUtil = DDEntityManagerUtil;
     }
 
     @Override
@@ -595,8 +592,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         select = prepareContextSearchPrimaryClause(select);
         select += " order by o.createdDate desc";
 
-        log.info("here is entity manager {}", entityManagerUtil.getEntityManager());
-        TypedQuery<BankProductMaster> q = entityManagerUtil.getEntityManager().createQuery(select,BankProductMaster.class);
+        log.info("here is entity manager {}", DDEntityManagerUtil.getEntityManager());
+        TypedQuery<BankProductMaster> q = DDEntityManagerUtil.getEntityManager().createQuery(select,BankProductMaster.class);
 
         int sizePerPage=pageRequest.getPageSize();
         int page=pageRequest.getPageNumber();
@@ -610,7 +607,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         List<BankProductMaster> results = q.getResultList();
 
         String select2 = select.replaceFirst("distinct o", " count(distinct o.id) ");
-        Query q2 = entityManagerUtil.getEntityManager().createQuery(select2);
+        Query q2 = DDEntityManagerUtil.getEntityManager().createQuery(select2);
         setParameterToSqlCount(searchDto, select, q2);
 
         log.info("Count -> {}",select2);
