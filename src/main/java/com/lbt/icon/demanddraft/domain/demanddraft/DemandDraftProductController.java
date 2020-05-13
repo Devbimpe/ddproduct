@@ -227,13 +227,13 @@ public class DemandDraftProductController {
     }
 
 
-    @GetMapping("/searchbybranchcurrencyglsubcodeorinstrument")
+    @GetMapping("/searchbybranchcurrencyglsubcode")
     public ResponseEntity<ApiResponseBase<Page<BankProductMaster>>> searchBankProductMasterByBranchCurrencyGlOrInstrument(
 
             @RequestParam(value="branchCode", required=false) String branchCode,
             @RequestParam(value="currencyCode", required=false) String currencyCode,
             @RequestParam(value="glSubCode", required=false) String glSubCode,
-            @RequestParam(value="instrumentCode", required=false) String instrumentCode,
+          //  @RequestParam(value="instrumentCode", required=false) String instrumentCode,
             @RequestParam(value="productCode", required=false) String productCode,
             @RequestParam(value="productName", required=false) String productName,
             @RequestParam(value="productStatus", required=false) String productStatus,
@@ -250,7 +250,7 @@ public class DemandDraftProductController {
                         .branchCode(branchCode)
                         .currencyCode(currencyCode)
                         .glSubCode(glSubCode)
-                        .instrumentCode(instrumentCode)
+                       // .instrumentCode(instrumentCode)
                         .productCode(productCode)
                         .productName(productName)
                         .productStatus(productStatus)

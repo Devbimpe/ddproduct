@@ -97,7 +97,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
     private static final String PRODUCT_CODE = "productCode";
 
-    private static final String INSTRUMENT_CODE = "instrumentCode";
+   // private static final String INSTRUMENT_CODE = "instrumentCode";
 
     private static final String GL_SUB_CODE = "glSubCode";
 
@@ -620,7 +620,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(BRANCH_CODE) > -1) 			q2.setParameter(BRANCH_CODE, searchDto.getBranchCode());
         if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(CURRENCY_CODE) > -1) 		q2.setParameter(CURRENCY_CODE, searchDto.getCurrencyCode());
         if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(GL_SUB_CODE) > -1) 			q2.setParameter(GL_SUB_CODE, searchDto.getGlSubCode());
-        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q2.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
+       // if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q2.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
         if(!searchDto.getProductCode().isEmpty() && select.indexOf(PRODUCT_CODE) > -1) 		q2.setParameter(PRODUCT_CODE, searchDto.getProductCode());
         if(!searchDto.getProductName().isEmpty() && select.indexOf(PRODUCT_NAME) > -1) 		q2.setParameter(PRODUCT_NAME, searchDto.getProductName());
         if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(SPACER_CODE) > -1) 			q2.setParameter(SPACER_CODE, searchDto.getSpacerCode());
@@ -641,7 +641,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(BRANCH_CODE) > -1) 			q.setParameter(BRANCH_CODE, searchDto.getBranchCode());
         if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(CURRENCY_CODE) > -1) 		q.setParameter(CURRENCY_CODE, searchDto.getCurrencyCode());
         if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(GL_SUB_CODE) > -1) 			q.setParameter(GL_SUB_CODE, searchDto.getGlSubCode());
-        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
+        //if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
         if(!searchDto.getProductCode().isEmpty() && select.indexOf(PRODUCT_CODE) > -1) 		q.setParameter(PRODUCT_CODE, searchDto.getProductCode());
         if(!searchDto.getProductName().isEmpty() && select.indexOf(PRODUCT_NAME) > -1) 		q.setParameter(PRODUCT_NAME, searchDto.getProductName());
         if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(SPACER_CODE) > -1) 			q.setParameter(SPACER_CODE, searchDto.getSpacerCode());
@@ -673,7 +673,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(BRANCH_CODE) == -1) select += " and r.branchCode like concat('%',:branchCode,'%') ";
         if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(CURRENCY_CODE) == -1) select += " and c.currencyCode like concat('%',:currencyCode,'%')  ";
         if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(GL_SUB_CODE) == -1) select += " and g.glsubCode like concat('%',:glSubCode,'%') ";
-        if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(INSTRUMENT_CODE) == -1) select += " and i.instrumentCode like concat('%',:instrumentCode,'%') ";
+       // if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(INSTRUMENT_CODE) == -1) select += " and i.instrumentCode like concat('%',:instrumentCode,'%') ";
         if(!searchDto.getSpacerCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(SPACER_CODE) == -1) select += " and s.spacerCode like concat('%',:spacerCode,'%') ";
         if(!searchDto.getAccountNoGenCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(ACCOUNT_NO_GENCODE) == -1) select += " and o.accountNoGenCode like concat('%',:accountNoGenCode,'%') ";
         return select;
