@@ -18,7 +18,7 @@ public class OfficeProductContextSearchDto {
 	String branchCode;
 	String currencyCode;
 	String glSubCode;
-	//String instrumentCode;
+	String instrumentCode;
 	String productCode;
 	String productName;
 	String productStatus;
