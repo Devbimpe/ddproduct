@@ -40,6 +40,7 @@ import com.lbt.icon.ledger.setup.glcodes.subcategory.domain.dto.GLSubCategoryDto
 import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
+import com.lbt.icon.transactions.events.type.ModuleId;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,11 +135,12 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             description = "create demand draft product record",
             dtoClass = CreateDemandDraftProductDTO.class,
             returnClass = QueryDemandDraftProductDTO.class,
-
+            moduleId = ModuleId.DDP,
             dtoValidators = @DtoValidator(validatorClass = DemandDraftProductValidator.class,
                     paramTypes = CreateDemandDraftProductDTO.class,
                     validateMethod = "validate"
             ) ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
+
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class, EntityNotFoundException.class,IconQueryException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
@@ -344,7 +346,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             description = "update demand draft product record",
             dtoClass = UpdateDemandDraftProductWithDependenciesDTO.class,
             returnClass = UpdateDemandDraftProductWithDependenciesDTO.class,
-
+            moduleId = ModuleId.DDP,
             identifierFinderConfigs = {
                     @IdentifierFinderConfig(
                             finderClass = DemandDraftProductServiceImpl.class,
@@ -424,6 +426,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                             identifierClass = String.class
                     )
             },
+            moduleId = ModuleId.DDP,
             naturalIdentifier="productCode"
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
@@ -451,6 +454,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                             identifierClass = String.class
                     )
             },
+            moduleId = ModuleId.DDP,
             naturalIdentifier="productCode"
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
