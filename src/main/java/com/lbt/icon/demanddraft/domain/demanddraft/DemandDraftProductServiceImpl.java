@@ -620,9 +620,9 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     private void setParameterToSqlCount(OfficeProductContextSearchDto searchDto, String select, Query q2) {
-
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(BRANCH_CODE) > -1) 			q2.setParameter(BRANCH_CODE, searchDto.getBranchCode());
         if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(CURRENCY_CODE) > -1) 		q2.setParameter(CURRENCY_CODE, searchDto.getCurrencyCode());
+        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1) 			q2.setParameter(PRODUCT_STATUS,  ProductStatus.valueOf(searchDto.getProductStatus()));
         if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(GL_SUB_CODE) > -1) 			q2.setParameter(GL_SUB_CODE, searchDto.getGlSubCode());
        // if(!searchDto.getInstrumentCode().isEmpty() && select.indexOf(INSTRUMENT_CODE) > -1) 	q2.setParameter(INSTRUMENT_CODE, searchDto.getInstrumentCode());
         if(!searchDto.getProductCode().isEmpty() && select.indexOf(PRODUCT_CODE) > -1) 		q2.setParameter(PRODUCT_CODE, searchDto.getProductCode());
@@ -632,16 +632,20 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         setDefaultCountParams(searchDto, select, q2);
     }
 
-    private void setDefaultCountParams(OfficeProductContextSearchDto searchDto, String select, Query q2) {
-        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)
-            q2.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
-        else
-            q2.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
+//    private void setDefaultCountParams(OfficeProductContextSearchDto searchDto, String select, Query q2) {
+//        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)
+//            q2.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
+//        else
+//            q2.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
+//        q2.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.DDRAFT);
+//    }
+
+        private void setDefaultCountParams(OfficeProductContextSearchDto searchDto, String select, Query q2) {
         q2.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.DDRAFT);
     }
 
     private void setParameterToSqlFetch(OfficeProductContextSearchDto searchDto, String select,	TypedQuery<BankProductMaster> q) {
-
+        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)  q.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(BRANCH_CODE) > -1) 			q.setParameter(BRANCH_CODE, searchDto.getBranchCode());
         if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(CURRENCY_CODE) > -1) 		q.setParameter(CURRENCY_CODE, searchDto.getCurrencyCode());
         if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(GL_SUB_CODE) > -1) 			q.setParameter(GL_SUB_CODE, searchDto.getGlSubCode());
@@ -653,25 +657,41 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         setDefaultFetchParams(searchDto, select, q);
     }
 
+//    private void setDefaultFetchParams(OfficeProductContextSearchDto searchDto, String select, TypedQuery<BankProductMaster> q) {
+//        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)
+//            q.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
+//        else
+//            q.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
+//        q.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.DDRAFT);
+//    }
+
     private void setDefaultFetchParams(OfficeProductContextSearchDto searchDto, String select, TypedQuery<BankProductMaster> q) {
-        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(PRODUCT_STATUS) > -1)
-            q.setParameter(PRODUCT_STATUS, ProductStatus.valueOf(searchDto.getProductStatus()));
-        else
-            q.setParameter(PRODUCT_STATUS, com.lbt.icon.bankproduct.types.ProductStatus.ACTIVE);
         q.setParameter(PRODUCT_TYPE_CODE, com.lbt.icon.bankproduct.types.BankProductType.DDRAFT);
     }
+
+
+//    private String prepareContextSearchPrimaryClause(String select) {
+//
+//        if(select.indexOf(WHERE) > -1) {
+//            select += " and o.productTypeCode=:productTypeCode and o.productStatus=:productStatus";
+//        } else {
+//            select += " where o.productTypeCode=:productTypeCode and o.productStatus=:productStatus";
+//        }
+//        return select;
+//    }
 
     private String prepareContextSearchPrimaryClause(String select) {
 
         if(select.indexOf(WHERE) > -1) {
-            select += " and o.productTypeCode=:productTypeCode and o.productStatus=:productStatus";
+            select += " and o.productTypeCode=:productTypeCode";
         } else {
-            select += " where o.productTypeCode=:productTypeCode and o.productStatus=:productStatus";
+            select += " where o.productTypeCode=:productTypeCode";
         }
         return select;
     }
 
     private String prepareContextSearchAndClause(OfficeProductContextSearchDto searchDto, String select) {
+        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(PRODUCT_STATUS) == -1) select += " and o.productStatus=:productStatus";
         if(!searchDto.getProductCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(PRODUCT_CODE) == -1) select += " and o.productCode like concat('%',:productCode,'%') ";
         if(!searchDto.getProductName().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(PRODUCT_NAME) == -1) select += " and o.productName like concat('%',:productName,'%') ";
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(WHERE) > -1 && select.indexOf(BRANCH_CODE) == -1) select += " and r.branchCode like concat('%',:branchCode,'%') ";
@@ -684,6 +704,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     private String prepareContextSearchWhereClause(OfficeProductContextSearchDto searchDto, String select) {
+        if(!searchDto.getProductStatus().isEmpty() && select.indexOf(WHERE) == -1)  select += " where o.productStatus=:productStatus";
         if(!searchDto.getBranchCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where r.branchCode like concat('%',:branchCode,'%') ";
         if(!searchDto.getCurrencyCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where c.currencyCode like concat('%',:currencyCode,'%')  ";
         if(!searchDto.getGlSubCode().isEmpty() && select.indexOf(WHERE) == -1) select += " where g.glsubCode like concat('%',:glSubCode,'%') ";
