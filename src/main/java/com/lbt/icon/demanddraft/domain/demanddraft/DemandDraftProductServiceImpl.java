@@ -41,7 +41,6 @@ import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
 import com.lbt.icon.transactions.events.type.ModuleId;
-import com.sun.javafx.tools.ant.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
