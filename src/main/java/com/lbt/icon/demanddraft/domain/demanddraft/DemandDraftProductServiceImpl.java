@@ -413,7 +413,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             code="ENABLE_DEMAND_DRAFT",
             description="Enable a demand draft product",
             operation=Checkable.Operation.OTHERS,
-            returnClass=BankProductMasterDTO.class,
+            returnClass=DemandDraftProductInquiryDTO.class,
             dtoValidators = @DtoValidator(
                     validatorClass = BankProductMasterValidator.class,
                     validateMethod = "validateEnable",
@@ -456,7 +456,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             code="DISABLE_DEMAND_DRAFT",
             description="Disable a demand draft product",
             operation=Checkable.Operation.OTHERS,
-            returnClass=BankProductMasterDTO.class,
+            returnClass=DemandDraftProductInquiryDTO.class,
             dtoValidators = @DtoValidator(
                     validatorClass = BankProductMasterValidator.class,
                     validateMethod = "validateDisable",
