@@ -431,8 +431,23 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT + "')")
-    public BankProductMasterDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
-        return bankProductMasterService.enableByProductCode(productCode);
+    public DemandDraftProductInquiryDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
+        DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
+
+        demandDraftProductInquiryDTO.setBankProduct( bankProductMasterService.enableByProductCode(productCode));
+
+        List<ExceptionDefinitionQueryDto> exceptionDTOS = exceptionDefinitionService.findByProductCodeAndProductTypeCode(productCode,BankProductType.DDRAFT.getCode());
+        if (exceptionDTOS != null && !exceptionDTOS.isEmpty()) {
+            demandDraftProductInquiryDTO.setExceptionDto(exceptionDTOS);
+        }
+        List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
+        List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
+        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
+
+        demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
+        demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
+        demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
+        return demandDraftProductInquiryDTO;
     }
 
     @Override
@@ -459,8 +474,25 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
-    public BankProductMasterDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
-        return bankProductMasterService.disableByProductCode(productCode);
+    public DemandDraftProductInquiryDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
+
+        DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
+
+        demandDraftProductInquiryDTO.setBankProduct(bankProductMasterService.disableByProductCode(productCode));
+
+        List<ExceptionDefinitionQueryDto> exceptionDTOS = exceptionDefinitionService.findByProductCodeAndProductTypeCode(productCode,BankProductType.DDRAFT.getCode());
+        if (exceptionDTOS != null && !exceptionDTOS.isEmpty()) {
+            demandDraftProductInquiryDTO.setExceptionDto(exceptionDTOS);
+        }
+        List<QueryDemandDraftProductChargesDTO> charges = demandDraftProductChargesService.findByProductCode(productCode);
+        List<QueryDemandDraftProductInstrDTO> instruments = demandDraftProductInstrService.findByProductCode(productCode);
+        List<QueryDemandDraftProductTranCodeLimitDTO> tranCodeLimits = demandDraftProductTranCodeLimitService.findByProductCode(productCode);
+
+        demandDraftProductInquiryDTO.setDemandDraftProductTranCodeLimits(tranCodeLimits);
+        demandDraftProductInquiryDTO.setDemandDraftProductCharges(charges);
+        demandDraftProductInquiryDTO.setDemandDraftProductInstruments(instruments);
+        return demandDraftProductInquiryDTO;
+
     }
 
 
