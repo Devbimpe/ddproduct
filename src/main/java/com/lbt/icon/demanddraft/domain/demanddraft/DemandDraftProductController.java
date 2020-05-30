@@ -102,7 +102,7 @@ public class DemandDraftProductController {
     @PutMapping("/{productCode}/disable")
     @ResponseBody
     public ResponseEntity<ApiResponseBase<DemandDraftProductInquiryDTO>> disableByProductCode(
-            @NotBlank @PathVariable(value = "productCode") String productCode)  throws FieldValidationException, EntityNotFoundException{
+            @NotBlank @PathVariable(value = "productCode") String productCode)  throws FieldValidationException, EntityNotFoundException,IconException{
         ApiResponseBase<DemandDraftProductInquiryDTO> rsp = new ApiResponseBase<>();
         rsp.setResponse(demandDraftProductService.disableByProductCode(productCode));
         rsp.setSuccessMessage("Demand draft product successfully disabled");
@@ -112,7 +112,7 @@ public class DemandDraftProductController {
     @PutMapping("/{productCode}/enable")
     @ResponseBody
     public ResponseEntity<ApiResponseBase<DemandDraftProductInquiryDTO>> enableByProductCode(
-            @NotBlank @PathVariable(value = "productCode") String productCode)  throws FieldValidationException, EntityNotFoundException{
+            @NotBlank @PathVariable(value = "productCode") String productCode)  throws FieldValidationException, EntityNotFoundException, IconException{
         ApiResponseBase<DemandDraftProductInquiryDTO> rsp = new ApiResponseBase<>();
         rsp.setResponse(demandDraftProductService.enableByProductCode(productCode));
         rsp.setSuccessMessage("Demand draft product successfully enabled");
