@@ -39,9 +39,9 @@ public interface DemandDraftProductService {
 
     Page<BankProductMasterDTO> findAll(Pageable pageable, BankProductType productType) throws IconQueryException;
 
-    DemandDraftProductInquiryDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException;
+    DemandDraftProductInquiryDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException,IconException;
 
-    DemandDraftProductInquiryDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException;
+    DemandDraftProductInquiryDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException,IconException;
 
     List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode);
 

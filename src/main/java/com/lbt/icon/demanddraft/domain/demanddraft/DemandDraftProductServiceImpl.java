@@ -41,6 +41,7 @@ import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
 import com.lbt.icon.transactions.events.type.ModuleId;
+import com.sun.javafx.tools.ant.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -408,7 +409,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,EntityNotFoundException.class} )
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,EntityNotFoundException.class, IconException.class} )
     @Checkable(
             code="ENABLE_DEMAND_DRAFT",
             description="Enable a demand draft product",
@@ -431,7 +432,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT + "')")
-    public DemandDraftProductInquiryDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
+    public DemandDraftProductInquiryDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException,IconException {
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
 
         demandDraftProductInquiryDTO.setBankProduct( bankProductMasterService.enableByProductCode(productCode));
@@ -451,7 +452,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,EntityNotFoundException.class} )
+    @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,EntityNotFoundException.class, IconException.class} )
     @Checkable(
             code="DISABLE_DEMAND_DRAFT",
             description="Disable a demand draft product",
@@ -474,7 +475,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
     @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
-    public DemandDraftProductInquiryDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException {
+    public DemandDraftProductInquiryDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException, IconException {
 
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
 
