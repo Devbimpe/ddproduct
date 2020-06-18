@@ -2,6 +2,8 @@ package com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -22,6 +24,7 @@ public class DemandDraftProductInstrDTO implements Serializable {
 
     private String instrumentCategory;
 
+    @NotBlank(message = "{demandDraftProductInstrDTO[NotBlank.isDefault]}")
     private boolean isDefault;
 
 }

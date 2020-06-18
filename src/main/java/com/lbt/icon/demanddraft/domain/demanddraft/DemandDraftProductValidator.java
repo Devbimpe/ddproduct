@@ -19,6 +19,7 @@ import com.lbt.icon.demanddraft.domain.demanddraft.dto.CreateDemandDraftProductD
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductDTO;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.UpdateDemandDraftProductWithDependenciesDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproductcharges.dto.DemandDraftProductChargesDTO;
+import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.DemandDraftProductInstrDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -91,6 +92,7 @@ public class DemandDraftProductValidator {
         validateTranCodeLimit(dto.getDemandDraftProductTranCodeLimits(), fieldValidationErrors);
 
 
+
     }
 
     private void validateCurrencyRate(CreateDemandDraftProductDTO dto, List<FieldValidationError> fieldValidationErrors) {
@@ -137,6 +139,8 @@ public class DemandDraftProductValidator {
            }
         }
     }
+
+
 
     private void validateProductCode(String productCode, List<FieldValidationError> fieldValidationErrors) {
         Boolean productCodeExists = repo.existsByProductCode(productCode);
