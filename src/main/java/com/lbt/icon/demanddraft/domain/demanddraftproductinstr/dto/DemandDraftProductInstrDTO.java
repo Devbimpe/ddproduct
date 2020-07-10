@@ -20,6 +20,7 @@ public class DemandDraftProductInstrDTO implements Serializable {
     @JsonIgnore
     private String productCode;
 
+    @NotBlank(message = "{demandDraftProductInstrDTO[NotBlank.instrCode]}")
     private String instrCode;
 
     private String instrumentCategory;

@@ -28,6 +28,7 @@ public class DemandDraftProductInstrServiceImpl implements DemandDraftProductIns
 
     @Override
     public QueryDemandDraftProductInstrDTO create(DemandDraftProductInstrDTO instr) {
+        demanddraftproductinstrValidator.validateFields(instr);
         DemandDraftProductInstr productInstr = modelMapper.map(instr,DemandDraftProductInstr.class);
         return modelMapper.map(demanddraftproductinstrRepository.create(productInstr),QueryDemandDraftProductInstrDTO.class);
     }
