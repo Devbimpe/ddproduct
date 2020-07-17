@@ -79,7 +79,7 @@ public class UpdateDemandDraftProductDTO extends BaseDTO {
 
     private String defaultCustodian;
 
-    private InstrumentSeries instrumentSeries;
+//    private InstrumentSeries instrumentSeries;
 
-
+    private String instrumentSeries;
 }

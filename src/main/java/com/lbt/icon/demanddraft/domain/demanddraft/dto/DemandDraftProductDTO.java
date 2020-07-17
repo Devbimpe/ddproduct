@@ -78,7 +78,8 @@ public class DemandDraftProductDTO implements Serializable {
 
     private String defaultCustodian;
 
-    private InstrumentSeries instrumentSeries;
+   // private InstrumentSeries instrumentSeries;
 
+    private String instrumentSeries;
 
 }

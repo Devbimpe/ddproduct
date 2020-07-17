@@ -83,7 +83,7 @@ public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable 
 
     private String defaultCustodian;
 
-    private InstrumentSeries instrumentSeries;
+   // private InstrumentSeries instrumentSeries;
 
-
+    private String instrumentSeries;
 }

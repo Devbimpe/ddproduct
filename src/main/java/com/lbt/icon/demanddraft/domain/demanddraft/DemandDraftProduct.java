@@ -2,6 +2,7 @@ package com.lbt.icon.demanddraft.domain.demanddraft;
 import com.lbt.icon.core.domain.BaseEntity;
 import com.lbt.icon.demanddraft.type.DDTransferFrequency;
 import com.lbt.icon.demanddraft.type.DemandDraftType;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import lombok.*;
 import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
@@ -101,6 +102,7 @@ public class DemandDraftProduct extends BaseEntity {
 
     @Column(name = "default_custodian")
     private String defaultCustodian;
+
 
     @Column(name = "instrument_series")
     private String instrumentSeries;
