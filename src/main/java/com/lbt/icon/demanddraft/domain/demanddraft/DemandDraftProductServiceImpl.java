@@ -141,7 +141,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     validateMethod = "validate"
             ) ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
 
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT}, moduleId = ModuleId.DDP)
     @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class, EntityNotFoundException.class,IconQueryException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.CREATE_DD_PRODUCT + "')")
     public QueryDemandDraftProductDTO create(CreateDemandDraftProductDTO dto) throws FieldValidationException,EntityNotFoundException, IconQueryException ,IconException{
@@ -359,7 +359,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
                     paramTypes = {Long.class, UpdateDemandDraftProductWithDependenciesDTO.class},
                     validateMethod = "validateUpdate"
             ),approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT}, moduleId = ModuleId.DDP)
     @Transactional(rollbackFor = Exception.class, noRollbackFor = {FieldValidationException.class,IconException.class} )
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.UPDATE_DD_PRODUCT + "')")
     public UpdateDemandDraftProductWithDependenciesDTO updateDemandDraftProductWithDependenciesById(Long id, UpdateDemandDraftProductWithDependenciesDTO dto) throws IconException {
@@ -429,7 +429,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             moduleId = ModuleId.DDP,
             naturalIdentifier="productCode"
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT}, moduleId = ModuleId.DDP)
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.ENABLE_DD_PRODUCT + "')")
     public DemandDraftProductInquiryDTO enableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException,IconException {
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
@@ -473,7 +473,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
             naturalIdentifier="productCode"
             ,approvalPermissions = {DDProductPermissionEnum.Authority.AUTHORIZE_DD_PRODUCT})
     @PreAuthorize("hasAuthority('" + DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT + "')")
-    @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, module = "DEMAND DRAFT PRODUCT")
+    @FuncAudit(operation = {DDProductPermissionEnum.Authority.DISABLE_DD_PRODUCT}, moduleId = ModuleId.DDP)
     public DemandDraftProductInquiryDTO disableByProductCode(@NotBlank String productCode) throws EntityNotFoundException, FieldValidationException, IconException {
 
         DemandDraftProductInquiryDTO demandDraftProductInquiryDTO = new DemandDraftProductInquiryDTO();
