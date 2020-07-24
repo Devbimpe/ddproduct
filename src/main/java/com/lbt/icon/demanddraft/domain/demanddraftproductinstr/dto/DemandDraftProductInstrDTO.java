@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -25,7 +26,7 @@ public class DemandDraftProductInstrDTO implements Serializable {
 
     private String instrumentCategory;
 
-    @NotBlank(message = "{demandDraftProductInstrDTO[NotBlank.isDefault]}")
+    @NotNull(message = "{demandDraftProductInstrDTO[NotNull.isDefault]}")
     private boolean isDefault;
 
 }
