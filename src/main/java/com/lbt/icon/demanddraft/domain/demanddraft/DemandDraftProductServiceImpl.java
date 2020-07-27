@@ -771,5 +771,9 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     }
 
 
+    @Override
+    public BankProductMasterDTO findByProductCode(String productCode) {
 
+             return  bankProductMasterService.findByProductCode(productCode).orElse(null) ;
+    }
 }

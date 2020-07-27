@@ -45,6 +45,7 @@ public interface DemandDraftProductService {
 
     List<BankProductMasterDTO> findProductsByProductCodeLike(String productCode);
 
+    BankProductMasterDTO findByProductCode(String productCode);
 
 	String getAccountNumberGenCodeByProductCode(String productCode);
 
