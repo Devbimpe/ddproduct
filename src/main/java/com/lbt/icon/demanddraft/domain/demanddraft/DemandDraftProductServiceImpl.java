@@ -40,6 +40,8 @@ import com.lbt.icon.ledger.setup.glcodes.subcategory.domain.dto.GLSubCategoryDto
 import com.lbt.icon.makerchecker.annotation.Checkable;
 import com.lbt.icon.makerchecker.annotation.DtoValidator;
 import com.lbt.icon.makerchecker.annotation.IdentifierFinderConfig;
+import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivity;
+import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivityService;
 import com.lbt.icon.transactions.events.type.ModuleId;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -85,6 +87,7 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
     private final ModelMapper modelMapper;
     private final ExceptionDefinitionService exceptionDefinitionService;
     private DDEntityManagerUtil DDEntityManagerUtil;
+    private CheckedActivityService checkedActivityService;
 
     private static final String PRODUCT_TYPE_CODE = "productTypeCode";
 
@@ -776,4 +779,6 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
 
              return  bankProductMasterService.findByDemandDraftProductCode(productCode);
     }
+
+
 }

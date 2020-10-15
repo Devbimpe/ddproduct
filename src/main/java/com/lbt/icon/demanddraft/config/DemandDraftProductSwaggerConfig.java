@@ -26,6 +26,7 @@ import java.util.List;
 @Configuration
 public class DemandDraftProductSwaggerConfig {
 
+    private final DDProductServiceConfig ddProductServiceConfig;
     @Bean
     public Docket demandDraftProductApi() {
 
@@ -36,6 +37,8 @@ public class DemandDraftProductSwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(buildApiInfo())
+                .securitySchemes(Collections.singletonList(securitySchema()))
+                .securityContexts(Collections.singletonList(securityContext()))
                 .pathMapping("/");
 
     }
@@ -56,6 +59,18 @@ public class DemandDraftProductSwaggerConfig {
                 .securityReferences(defaultAuth())
                 .forPaths(PathSelectors.ant("/**"))
                 .build();
+    }
+
+
+    private OAuth securitySchema() {
+
+        List<GrantType> grantTypes = new ArrayList<>();
+        GrantType grantType = new ResourceOwnerPasswordCredentialsGrant(ddProductServiceConfig.getAuthServerLink() + "/oauth/token");
+
+        grantTypes.add(grantType);
+
+        return new OAuth("Oauth2 Schema", getScopes(), grantTypes);
+
     }
 
     private List<SecurityReference> defaultAuth() {

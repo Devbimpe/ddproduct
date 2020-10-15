@@ -14,6 +14,9 @@ import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
+import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivity;
+import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivityService;
+import com.lbt.icon.transactions.events.type.ModuleId;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,15 +42,12 @@ import java.util.UUID;
 @RequestMapping("v1/demanddrafts")
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class DemandDraftProductController {
     private final DemandDraftProductService demandDraftProductService;
     private final BankProductContextSearch accountProductService;
 
 
-    public DemandDraftProductController(DemandDraftProductService demandDraftProductService, BankProductContextSearch accountProductService) {
-        this.demandDraftProductService = demandDraftProductService;
-        this.accountProductService = accountProductService;
-    }
 
     @PostMapping
     public ResponseEntity<ApiResponseBase<QueryDemandDraftProductDTO>> create(@RequestBody CreateDemandDraftProductDTO dto) throws IconException {
@@ -81,7 +81,7 @@ public class DemandDraftProductController {
     @PutMapping("/{id}/update")
     public ResponseEntity<ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO>> updateWithDependenciesById(@RequestBody UpdateDemandDraftProductWithDependenciesDTO dto, @PathVariable("id") Long id) throws IconException {
         ApiResponseBase<UpdateDemandDraftProductWithDependenciesDTO> apiResponseBase = new ApiResponseBase<>();
-        apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
+       apiResponseBase.setSuccessMessage("Demand draft product updated successfully");
         dto.setProductCode(dto.getBankProduct().getProductCode());
         log.info("dto is{}", dto);
         apiResponseBase.setResponse(demandDraftProductService.updateDemandDraftProductWithDependenciesById(id,dto));

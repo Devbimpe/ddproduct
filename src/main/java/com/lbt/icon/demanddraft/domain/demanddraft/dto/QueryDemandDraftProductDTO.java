@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.core.domain.BaseDTO;
+import com.lbt.icon.core.domain.BaseQueryDto;
 import com.lbt.icon.demanddraft.type.DDTransferFrequency;
 import com.lbt.icon.demanddraft.type.DemandDraftType;
 import com.lbt.icon.demanddraft.type.InstrumentSeries;
@@ -24,7 +25,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryDemandDraftProductDTO extends BaseDTO implements Serializable {
+public class QueryDemandDraftProductDTO extends BaseQueryDto implements Serializable {
 
     private static final long serialVersionUUID = 1L;
 

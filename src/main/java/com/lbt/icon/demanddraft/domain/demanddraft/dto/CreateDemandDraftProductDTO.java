@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Setter
 @Getter
 @NoArgsConstructor
-
+@ToString
 public class CreateDemandDraftProductDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
