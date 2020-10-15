@@ -13,6 +13,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 /**
@@ -25,10 +26,25 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryDemandDraftProductDTO extends BaseQueryDto implements Serializable {
+public class QueryDemandDraftProductDTO implements Serializable {
 
     private static final long serialVersionUUID = 1L;
 
+
+    protected LocalDateTime createdDate;
+    protected String createdBy;
+
+    protected LocalDateTime lastModifiedDate;
+
+    protected LocalDateTime deletedDate;
+    protected boolean deleted = false;
+    protected String checkSum;
+    protected String updatedBy;
+    protected String approvedBy;
+    protected String status;
+    protected String stateMode;
+    private Long id;
+    private Long version;
 
     private String productCode;
 
