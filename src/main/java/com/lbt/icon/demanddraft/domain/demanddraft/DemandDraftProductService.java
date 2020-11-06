@@ -10,6 +10,7 @@ import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
+import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDraftProductInstrDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ public interface DemandDraftProductService {
 
 
     DemandDraftProductInquiryDTO inquireByProductCode(String productCode) throws IconException;
+    List<QueryDemandDraftProductInstrDTO> findInstrumentTypeByProductCode(String productCode) throws IconException;
 
     DemandDraftProductInquiryDTO findById(Long id) throws IconException;
 
