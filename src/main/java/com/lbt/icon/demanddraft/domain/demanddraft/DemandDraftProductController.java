@@ -274,7 +274,7 @@ public class DemandDraftProductController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("{productCode}")
+    @GetMapping("/findinstrumenttypebyproductcode/{productCode}")
     public ResponseEntity<ApiResponseBase<List<QueryDemandDraftProductInstrDTO>>> findInstrumentTypeByProductCode(@PathVariable("productCode") String productCode) throws IconException {
         ApiResponseBase<List<QueryDemandDraftProductInstrDTO>> apiResponseBase = new ApiResponseBase();
         List<QueryDemandDraftProductInstrDTO> findByProductCode = demandDraftProductService.findInstrumentTypeByProductCode(productCode);
