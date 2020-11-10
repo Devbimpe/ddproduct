@@ -14,7 +14,11 @@ import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
+
 import com.lbt.icon.demanddraft.type.InstrumentSeries;
+
+import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDraftProductInstrDTO;
+
 import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivity;
 import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivityService;
 import com.lbt.icon.transactions.events.type.ModuleId;
@@ -274,10 +278,18 @@ public class DemandDraftProductController {
                 HttpStatus.OK);
     }
 
-
     @GetMapping("/instrumentSeries")
     public List<InstrumentSeries> getAllInstrumentSeries() {
         return demandDraftProductService.getInstrumentSeries();
+    }
+
+    @GetMapping("/findinstrumenttypebyproductcode/{productCode}")
+    public ResponseEntity<ApiResponseBase<List<QueryDemandDraftProductInstrDTO>>> findInstrumentTypeByProductCode(@PathVariable("productCode") String productCode) throws IconException {
+        ApiResponseBase<List<QueryDemandDraftProductInstrDTO>> apiResponseBase = new ApiResponseBase();
+        List<QueryDemandDraftProductInstrDTO> findByProductCode = demandDraftProductService.findInstrumentTypeByProductCode(productCode);
+        apiResponseBase.setResponse(findByProductCode);
+        return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
+
     }
 
 }
