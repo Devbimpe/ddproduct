@@ -30,6 +30,7 @@ import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.DemandDra
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.DemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.demanddraftproducttrancodelimit.dto.QueryDemandDraftProductTranCodeLimitDTO;
 import com.lbt.icon.demanddraft.domain.util.DDEntityManagerUtil;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import com.lbt.icon.excd.domain.exceptiondefinition.ExceptionDefinitionService;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionQueryDto;
 import com.lbt.icon.excd.domain.exceptiondefinition.dto.ExceptionDefinitionUpdatedDto;
@@ -780,5 +781,15 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
              return  bankProductMasterService.findByDemandDraftProductCode(productCode);
     }
 
+
+
+    @Override
+    public List<InstrumentSeries> getInstrumentSeries() {
+        List<InstrumentSeries> list = new ArrayList<>();
+        for (InstrumentSeries e : InstrumentSeries.values()) {
+            list.add(e);
+        }
+        return list;
+    }
 
 }

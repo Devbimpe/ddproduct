@@ -14,6 +14,7 @@ import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.core.util.CommonUtils;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivity;
 import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivityService;
 import com.lbt.icon.transactions.events.type.ModuleId;
@@ -271,6 +272,12 @@ public class DemandDraftProductController {
                         null,
                         null),
                 HttpStatus.OK);
+    }
+
+
+    @GetMapping("/instrumentSeries")
+    public List<InstrumentSeries> getAllInstrumentSeries() {
+        return demandDraftProductService.getInstrumentSeries();
     }
 
 }

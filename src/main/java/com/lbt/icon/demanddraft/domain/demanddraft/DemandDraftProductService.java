@@ -10,6 +10,7 @@ import com.lbt.icon.core.exception.FieldValidationException;
 import com.lbt.icon.core.exception.IconException;
 import com.lbt.icon.core.exception.IconQueryException;
 import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
+import com.lbt.icon.demanddraft.type.InstrumentSeries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,7 @@ public interface DemandDraftProductService {
 
     Page<BankProductMaster> findBankProductMasterByBranchCurrencyGlOrInstrument(OfficeProductContextSearchDto officeProductContextSearchDto, PageRequest pageRequest) throws EntityNotFoundException, IconQueryException;
 
-
+    List<InstrumentSeries> getInstrumentSeries();
        //public Page<BankProductMasterDTO> search(String reportDescription, String fromDate, String toDate, Pageable pageable) throws IconException
 }
 
