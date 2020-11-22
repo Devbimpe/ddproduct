@@ -1,6 +1,5 @@
 package com.lbt.icon.demanddraft.domain.demanddraft;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lbt.icon.bankproduct.domain.master.BankProductMaster;
 import com.lbt.icon.bankproduct.domain.master.dto.BankProductMasterDTO;
 import com.lbt.icon.bankproduct.domain.master.search.BankProductContextSearch;
@@ -18,10 +17,6 @@ import com.lbt.icon.demanddraft.domain.demanddraft.dto.*;
 import com.lbt.icon.demanddraft.type.InstrumentSeries;
 
 import com.lbt.icon.demanddraft.domain.demanddraftproductinstr.dto.QueryDemandDraftProductInstrDTO;
-
-import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivity;
-import com.lbt.icon.makerchecker.domain.checkedactivity.CheckedActivityService;
-import com.lbt.icon.transactions.events.type.ModuleId;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -290,6 +284,12 @@ public class DemandDraftProductController {
         apiResponseBase.setResponse(findByProductCode);
         return new ResponseEntity<>(apiResponseBase, HttpStatus.OK);
 
+    }
+
+
+    @GetMapping("/{productCode}/existsbyproductcode")
+    public boolean existsByProductCode(@PathVariable String productCode) {
+      return demandDraftProductService.existsByProductCode(productCode);
     }
 
 }

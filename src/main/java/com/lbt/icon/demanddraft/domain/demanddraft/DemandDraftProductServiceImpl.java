@@ -818,4 +818,8 @@ public class DemandDraftProductServiceImpl implements DemandDraftProductService 
         return demandDraftProductTranCodeLimitService.updateTranCodeBatch(productCode, demandDraftProductTranCodeLimits);
     }
 
+    @Override
+    public boolean existsByProductCode(String productCode) {
+        return demandDraftProductRepository.existsByProductCode(productCode);
+    }
 }

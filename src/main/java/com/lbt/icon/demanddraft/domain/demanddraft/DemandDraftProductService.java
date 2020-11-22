@@ -72,6 +72,8 @@ public interface DemandDraftProductService {
     Page<BankProductMaster> findBankProductMasterByBranchCurrencyGlOrInstrument(OfficeProductContextSearchDto officeProductContextSearchDto, PageRequest pageRequest) throws EntityNotFoundException, IconQueryException;
 
     List<InstrumentSeries> getInstrumentSeries();
+
+    boolean existsByProductCode(String productCode);
        //public Page<BankProductMasterDTO> search(String reportDescription, String fromDate, String toDate, Pageable pageable) throws IconException
 }
 
